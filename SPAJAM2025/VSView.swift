@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct VsView : View {
+   
     
     var body: some View {
         NavigationStack{
@@ -38,7 +39,7 @@ struct VsView : View {
                 }
                 
                 
-                VStack(spacing: 0){
+                VStack(spacing: 10){
                     
                     HStack {
                         Spacer()
@@ -52,21 +53,91 @@ struct VsView : View {
                     }
                     .padding(.top)
                     
-                    Spacer()
+                    Spacer().frame(height: 70)
+                    
+                    
+                    
+                    
                     
                     Text("対戦成立")
                         .font(.system(size: 55))
                         .foregroundColor(.white)
+                        .padding()
                         
-                    Spacer()
+                    Spacer().frame(height: 50)
+                   
                     
-                    HStack{
+                    
+                    
+                    HStack(alignment:.center){
                         
+                        Spacer()
+                        
+                        //ここに実際のアイコン
+                        Circle()
+                            .foregroundColor(.white)
+                            .frame(width: 120, height: 120)
+                        
+                        Spacer()
+                            
+                        ZStack(alignment:.center){
+                           
+                            Image("Vstar")
+                                .resizable()
+                                .foregroundColor(.yellow)
+                                .frame(width: 70, height: 70)
+                                .opacity(0.8)
+                            
+                            
+                            Text("VS")
+                                .offset(y:3)
+                                .font(.system(size: 24))
+                                .foregroundColor(.black)
+                                .bold()
+                                
+                                
+                                
+                    }
+                        
+                        Spacer()
+                        //ここに実際のアイコン
+                        Circle()
+                            .frame(width: 120, height: 120)
+                            .foregroundColor(.white)
+                        
+                        Spacer()
+                           
                         
                         
                         
                         
                     }
+                    Spacer().frame(height: 50)
+                    
+                    Text("あなたは　です")
+                        .font(.system(size: 35))
+                        .foregroundColor(.white)
+                    
+                   Spacer()
+                    
+                    Button {
+                       
+                        
+                    } label: {
+                        Text("開始")
+                            .font(.headline)
+                            .frame(width: 250)
+                            .padding()
+                            .background(Color.black.opacity(0.3))
+                            .foregroundColor(.white)
+                            .cornerRadius(32)
+                            .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
+                        
+                    }.padding(.bottom)
+
+                    
+                   
+
                     
                 }
             }
@@ -77,6 +148,3 @@ struct VsView : View {
 #Preview {
    VsView()
 }
-
-
-
