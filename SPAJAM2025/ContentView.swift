@@ -16,7 +16,7 @@ struct ContentView: View {
 //            TitleView()
 //        }
         VStack{
-            StarGazingView(stars: $loader.stars)
+            MatchStartView()
                 .environmentObject(gameCenterManager)
         }
     }

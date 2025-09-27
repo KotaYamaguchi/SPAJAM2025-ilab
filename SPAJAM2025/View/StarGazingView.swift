@@ -36,21 +36,7 @@ struct StarGazingView: View {
                     
                     
                     VStack{
-                        NavigationLink{MatchingView()}label:{
-                            // リンクの見た目（テキストやアイコン）
-                            Image(systemName: "person.line.dotted.person.fill")
-                            
-                        }
-                        .font(.system(size: 25))
-                        .frame(width: 50, height: 30)
-                        .foregroundStyle(.white)
                         
-                        Text("\(motionModel.test)")
-                            .foregroundStyle(.white)
-                        Text("\(motionModel.signedVerticalAngle)")
-                            .foregroundStyle(.white)
-                        //                        Text("\(headingManager.heading)")
-                        //                            .foregroundStyle(.white)
                         
                         
                         Spacer()

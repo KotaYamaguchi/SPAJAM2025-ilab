@@ -8,17 +8,22 @@ class GameCenterManager: NSObject, ObservableObject {
     @Published var currentMatch: GKMatch?
     @Published var lastReceivedAction: PlayerAction?
     
-    func authenticatePlayer() {
+    func authenticatePlayer(completion: @escaping (Bool) -> Void) {
         GKLocalPlayer.local.authenticateHandler = { viewController, error in
-            if viewController != nil {
+            if let viewController = viewController {
                 // 認証画面を表示
+                UIApplication.shared.windows.first?.rootViewController?.present(viewController, animated: true, completion: nil)
+                completion(false)
                 return
             }
             if error != nil {
                 print("認証エラー: \(error?.localizedDescription ?? "")")
+                self.isAuthenticated = false
+                completion(false)
                 return
             }
             self.isAuthenticated = GKLocalPlayer.local.isAuthenticated
+            completion(self.isAuthenticated)
         }
     }
 }

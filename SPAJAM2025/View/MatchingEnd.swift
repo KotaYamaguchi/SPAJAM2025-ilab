@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MatchingEnd: View {
     
+    @StateObject private var loader = StarLoader()
+    
     var body: some View {
         NavigationStack{
             ZStack{
@@ -59,6 +61,18 @@ struct MatchingEnd: View {
                         .font(.system(size:35))
                         .foregroundColor(.white)
                         .transition(.opacity)
+                    
+                    NavigationLink {
+                                    StarGazingView(stars: $loader.stars)
+                                        } label: {
+                                            Text("星空を眺める")
+                                                .font(.headline)
+                                                .frame(width: 250)
+                                                .padding()
+                                                .background(Color.white.opacity(0.2))
+                                                .foregroundColor(.white)
+                                                .cornerRadius(32)
+                                        }
                     
                     Spacer()
                     
