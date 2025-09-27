@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-struct VsView : View {
+struct VSView : View {
    
+    @StateObject private var loader = StarLoader()
     
     var body: some View {
         NavigationStack{
@@ -120,10 +121,9 @@ struct VsView : View {
                     
                    Spacer()
                     
-                    Button {
-                       
-                        
-                    } label: {
+                    NavigationLink{
+                        StarGazingView(stars: $loader.stars)
+                    }label: {
                         Text("開始")
                             .font(.headline)
                             .frame(width: 250)
@@ -142,9 +142,10 @@ struct VsView : View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
 #Preview {
-   VsView()
+   VSView()
 }
