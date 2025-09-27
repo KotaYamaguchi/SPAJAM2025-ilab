@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A856C0052E88383900DA9B3B /* SwiftAA in Frameworks */ = {isa = PBXBuildFile; productRef = A856C0042E88383900DA9B3B /* SwiftAA */; };
+		A856C0062E88384200DA9B3B /* SwiftAA in Embed Frameworks */ = {isa = PBXBuildFile; productRef = A856C0042E88383900DA9B3B /* SwiftAA */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		8A7E176C2E87C45200DE8870 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -23,6 +28,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		A856C0072E88384200DA9B3B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A856C0062E88384200DA9B3B /* SwiftAA in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		8A7E175E2E87C45000DE8870 /* SPAJAM2025.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SPAJAM2025.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A7E176B2E87C45200DE8870 /* SPAJAM2025Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SPAJAM2025Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -35,16 +54,6 @@
 			path = SPAJAM2025;
 			sourceTree = "<group>";
 		};
-		8A7E176E2E87C45200DE8870 /* SPAJAM2025Tests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SPAJAM2025Tests;
-			sourceTree = "<group>";
-		};
-		8A7E17782E87C45200DE8870 /* SPAJAM2025UITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SPAJAM2025UITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A856C0052E88383900DA9B3B /* SwiftAA in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,8 +86,6 @@
 			isa = PBXGroup;
 			children = (
 				8A7E17602E87C45000DE8870 /* SPAJAM2025 */,
-				8A7E176E2E87C45200DE8870 /* SPAJAM2025Tests */,
-				8A7E17782E87C45200DE8870 /* SPAJAM2025UITests */,
 				8A7E175F2E87C45000DE8870 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -102,6 +110,7 @@
 				8A7E175A2E87C45000DE8870 /* Sources */,
 				8A7E175B2E87C45000DE8870 /* Frameworks */,
 				8A7E175C2E87C45000DE8870 /* Resources */,
+				A856C0072E88384200DA9B3B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -112,6 +121,7 @@
 			);
 			name = SPAJAM2025;
 			packageProductDependencies = (
+				A856C0042E88383900DA9B3B /* SwiftAA */,
 			);
 			productName = SPAJAM2025;
 			productReference = 8A7E175E2E87C45000DE8870 /* SPAJAM2025.app */;
@@ -129,9 +139,6 @@
 			);
 			dependencies = (
 				8A7E176D2E87C45200DE8870 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				8A7E176E2E87C45200DE8870 /* SPAJAM2025Tests */,
 			);
 			name = SPAJAM2025Tests;
 			packageProductDependencies = (
@@ -152,9 +159,6 @@
 			);
 			dependencies = (
 				8A7E17772E87C45200DE8870 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				8A7E17782E87C45200DE8870 /* SPAJAM2025UITests */,
 			);
 			name = SPAJAM2025UITests;
 			packageProductDependencies = (
@@ -195,6 +199,9 @@
 			);
 			mainGroup = 8A7E17552E87C45000DE8870;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A856C0032E88383900DA9B3B /* XCRemoteSwiftPackageReference "SwiftAA" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8A7E175F2E87C45000DE8870 /* Products */;
 			projectDirPath = "";
@@ -395,9 +402,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SPAJAM2025/SPAJAM2025.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CUFJUPTS3G;
+				DEVELOPMENT_TEAM = JPFFUM77LT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -411,7 +419,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kotayamaguchi.SPAJAM2025;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kotayamaguchi.SPAJAM2025-ZUBARIBOSHI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -428,9 +436,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SPAJAM2025/SPAJAM2025.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CUFJUPTS3G;
+				DEVELOPMENT_TEAM = JPFFUM77LT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -444,7 +453,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kotayamaguchi.SPAJAM2025;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kotayamaguchi.SPAJAM2025-ZUBARIBOSHI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -580,6 +589,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A856C0032E88383900DA9B3B /* XCRemoteSwiftPackageReference "SwiftAA" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onekiloparsec/SwiftAA";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A856C0042E88383900DA9B3B /* SwiftAA */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A856C0032E88383900DA9B3B /* XCRemoteSwiftPackageReference "SwiftAA" */;
+			productName = SwiftAA;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8A7E17562E87C45000DE8870 /* Project object */;
 }

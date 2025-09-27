@@ -21,7 +21,7 @@ struct SeededGenerator: RandomNumberGenerator {
 }
 
 // MARK: - 星モデル
-struct Star: Identifiable {
+struct BackStar: Identifiable {
     let id = UUID()
     let x: CGFloat
     let y: CGFloat
@@ -31,7 +31,7 @@ struct Star: Identifiable {
 
 // MARK: - 星空ビュー
 struct StarrySkyView: View {
-    private let stars: [Star]
+    private let stars: [BackStar]
     @State private var flicker = false
     @State private var showMeteor = false
     @State private var meteorStart: CGSize = .zero
@@ -46,11 +46,11 @@ struct StarrySkyView: View {
         self.height = height
         
         var rng = SeededGenerator(seed: seed)
-        var tempStars: [Star] = []
+        var tempStars: [BackStar] = []
         
         for _ in 0..<starCount {
             tempStars.append(
-                Star(
+                BackStar(
                     x: CGFloat.random(in: 0...width, using: &rng),
                     y: CGFloat.random(in: 0...height * 0.8, using: &rng),
                     size: CGFloat.random(in: 1...3, using: &rng),

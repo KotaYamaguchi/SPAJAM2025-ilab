@@ -8,9 +8,16 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var loader = StarLoader()
+    @StateObject private var gameCenterManager = GameCenterManager()
+    
     var body: some View {
-        NavigationStack{
-            TitleView()
+//        NavigationStack{
+//            TitleView()
+//        }
+        VStack{
+            StarGazingView(stars: $loader.stars)
+                .environmentObject(gameCenterManager)
         }
     }
 }
