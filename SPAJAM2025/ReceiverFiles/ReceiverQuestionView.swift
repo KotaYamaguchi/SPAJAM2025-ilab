@@ -8,35 +8,55 @@
 import SwiftUI
 
 struct ReceiverQuestionView: View {
+    @State private var isExpandQuesitions:Bool = false
     var body: some View {
         VStack{
-            Text("質問が届きました")
-            ZStack{
-                RoundedRectangle(cornerRadius: 20)
-                    .frame(width: 300,height: 100)
-                    .foregroundStyle(.white)
+            Spacer()
+            if isExpandQuesitions{
+                questionList()
+            }else{
+                askButton()
+            }
+        }
+    }
+    
+    @ViewBuilder func questionList() -> some View {
+        VStack(spacing:10){
+            Button{
+                
+            }label: {
                 Text("オリオン座の近くにありますか？")
             }
-            HStack{
-                Button(action: {
-                    //はいを押したときの処理
-                }){
-                    Text("嘘をつく")
-                        .frame(width: 100,height: 50)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
-                Button(action: {
-                    //いいえを押したときの処理
-                }){
-                    Text("正直に答える")
-                        .frame(width: 120,height: 50)
-                        .background(Color.red)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
+         
+            Button{
+                
+            }label: {
+                Text("オリオン座の近くにありますか？")
             }
+          
+            Button{
+                
+            }label: {
+                Text("オリオン座の近くにありますか？")
+            }
+           
+            Button{
+                withAnimation {
+                    isExpandQuesitions = false
+                }
+            }label: {
+                Image(systemName: "xmark")
+            }
+            
+        }
+    }
+    @ViewBuilder func askButton() -> some View {
+        Button{
+            withAnimation {
+                isExpandQuesitions = true
+            }
+        }label: {
+            Text("質問する")
         }
     }
 }
