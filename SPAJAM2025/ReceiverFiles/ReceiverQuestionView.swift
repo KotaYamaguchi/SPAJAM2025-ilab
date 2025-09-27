@@ -9,19 +9,24 @@ import SwiftUI
 
 struct ReceiverQuestionView: View {
     @State private var isExpandQuesitions:Bool = false
-    @State private var isSelectedStar:Bool = false
+    @State private var isSelectedStar:Bool = true
     var body: some View {
-        VStack{
-            Spacer()
-            if isExpandQuesitions{
-                questionList()
-            }else{
-                if isSelectedStar{
-                    answerButton()
+        ZStack{
+            Color(red: 0.1, green: 0.1, blue: 0.4)
+                .ignoresSafeArea()
+            VStack{
+                Spacer()
+                if isExpandQuesitions{
+                    questionList()
+                }else{
+                    if isSelectedStar{
+                        answerButton()
+                    }
+                    askButton()
                 }
-                askButton()
             }
         }
+        
     }
     
     @ViewBuilder func questionList() -> some View {
@@ -31,19 +36,19 @@ struct ReceiverQuestionView: View {
             }label: {
                 Text("オリオン座の近くにありますか？")
             }
-            
+            .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
             Button{
                 //質問を送信
             }label: {
                 Text("南側にありますか？")
             }
-            
+            .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
             Button{
                 //質問を送信
             }label: {
                 Text("どのくらいの明るさですか？")
             }
-            
+            .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
             Button{
                 //質問リストを閉じる
                 withAnimation {
@@ -52,7 +57,7 @@ struct ReceiverQuestionView: View {
             }label: {
                 Image(systemName: "xmark")
             }
-            
+            .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 30))
         }
     }
     @ViewBuilder func askButton() -> some View {
@@ -64,6 +69,7 @@ struct ReceiverQuestionView: View {
         }label: {
             Text("質問する")
         }
+        .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
     }
     @ViewBuilder func answerButton() -> some View {
         Button{
@@ -71,6 +77,7 @@ struct ReceiverQuestionView: View {
         }label: {
             Text("ずばり！")
         }
+        .buttonStyle(.customThemed(backgroundColor: .yellow, foregroundColor: .black))
     }
 }
 

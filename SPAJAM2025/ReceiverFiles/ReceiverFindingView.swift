@@ -9,8 +9,9 @@ import SwiftUI
 
 struct ReceiverFindingView: View {
     var body: some View {
-        VStack{
-            
+        ZStack{
+            Color(red: 0.1, green: 0.1, blue: 0.4)
+                .ignoresSafeArea()
         }
     }
 }
