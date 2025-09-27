@@ -1,14 +1,9 @@
-//
-//  VSView.swift
-//  SPAJAM2025
-//
-//  Created by すさきひとむ on 2025/09/27.
-//
-
 import SwiftUI
 
-struct VsView : View {
+struct VSView : View {
    
+    @StateObject private var loader = StarLoader()
+    @EnvironmentObject var gameCenterManager: GameCenterManager
     
     var body: some View {
         NavigationStack{
@@ -55,10 +50,6 @@ struct VsView : View {
                     
                     Spacer().frame(height: 70)
                     
-                    
-                    
-                    
-                    
                     Text("対戦成立")
                         .font(.system(size: 55))
                         .foregroundColor(.white)
@@ -66,17 +57,23 @@ struct VsView : View {
                         
                     Spacer().frame(height: 50)
                    
-                    
-                    
-                    
                     HStack(alignment:.center){
                         
                         Spacer()
                         
-                        //ここに実際のアイコン
-                        Circle()
-                            .foregroundColor(.white)
-                            .frame(width: 120, height: 120)
+                        // 自分のアバター
+                        if let avatar = gameCenterManager.localPlayerAvatar {
+                            avatar
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 120, height: 120)
+                                .clipShape(Circle())
+                        } else {
+                            // 読み込み中のプレースホルダー
+                            Circle()
+                                .foregroundColor(.white)
+                                .frame(width: 120, height: 120)
+                        }
                         
                         Spacer()
                             
@@ -95,35 +92,36 @@ struct VsView : View {
                                 .foregroundColor(.black)
                                 .bold()
                                 
-                                
-                                
                     }
                         
                         Spacer()
-                        //ここに実際のアイコン
-                        Circle()
-                            .frame(width: 120, height: 120)
-                            .foregroundColor(.white)
+                        // 対戦相手のアバター
+                        if let avatar = gameCenterManager.opponentAvatar {
+                            avatar
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 120, height: 120)
+                                .clipShape(Circle())
+                        } else {
+                            // 読み込み中のプレースホルダー
+                            ProgressView()
+                                .frame(width: 120, height: 120)
+                                
+                        }
                         
                         Spacer()
-                           
-                        
-                        
-                        
-                        
                     }
                     Spacer().frame(height: 50)
                     
-                    Text("あなたは　です")
+                    Text("あなたは\(gameCenterManager.localPlayerRole)です")
                         .font(.system(size: 35))
                         .foregroundColor(.white)
                     
                    Spacer()
                     
-                    Button {
-                       
-                        
-                    } label: {
+                    NavigationLink{
+                        GameRouterView()
+                    }label: {
                         Text("開始")
                             .font(.headline)
                             .frame(width: 250)
@@ -134,17 +132,16 @@ struct VsView : View {
                             .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
                         
                     }.padding(.bottom)
-
-                    
-                   
-
-                    
                 }
             }
+            .onAppear {
+                gameCenterManager.loadLocalPlayerAvatar()
+            }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
 #Preview {
-   VsView()
+   VSView()
 }

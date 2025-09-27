@@ -9,7 +9,8 @@ import SwiftUI
 
 struct MatchingEnd: View {
     
-    @StateObject private var loader = StarLoader()
+    
+    @State private var shouldNavigateToVSView = false // 画面遷移をコントロールするための状態変数
     
     var body: some View {
         NavigationStack{
@@ -62,22 +63,19 @@ struct MatchingEnd: View {
                         .foregroundColor(.white)
                         .transition(.opacity)
                     
-                    NavigationLink {
-                                    StarGazingView(stars: $loader.stars)
-                                        } label: {
-                                            Text("星空を眺める")
-                                                .font(.headline)
-                                                .frame(width: 250)
-                                                .padding()
-                                                .background(Color.white.opacity(0.2))
-                                                .foregroundColor(.white)
-                                                .cornerRadius(32)
-                                        }
-                    
                     Spacer()
                     
                     
                 }
+            }
+            .onAppear {
+                // 2秒後に画面遷移を実行するタイマー
+                Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { _ in
+                    self.shouldNavigateToVSView = true
+                }
+            }
+            .navigationDestination(isPresented: $shouldNavigateToVSView) {
+                VSView()
             }
         }
     }
