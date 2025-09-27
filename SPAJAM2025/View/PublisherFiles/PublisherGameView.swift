@@ -11,12 +11,11 @@ struct PublisherGameView: View {
     @State private var currentView: PublisherViewIdentifier = .starHiding
     
     //送信するデータ
-    //出題者に送信する質問の文字列
+    //出題者に送信する「はい」「いいえ」のString
     @State private var isAnsweredQuestion: Bool = false
-    //出題者に送信する星の情報，インデックスなのかUUIDなのかたいし判断
-    @State private var hideStarInfo: String = ""
-    //ZUBARIボタンを押されたことを受け取り，正誤判定を行うことを通知
-    @State private var isPushedAnswer: Bool = false
+    //回答したことを伝えるフラグ
+    @State private var isAnsweredFlag: Bool = false
+    
     //送信するデータここまで
     var body: some View {
         ZStack{

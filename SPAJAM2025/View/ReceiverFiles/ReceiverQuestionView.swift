@@ -44,7 +44,6 @@ struct ReceiverQuestionView: View {
                 Button {
                     viewModel.selectedQuestion = question
                     print("質問を送信: \(question)")
-                    viewModel.sendSelectedQuestion() // ここで送信
                     withAnimation { isExpandQuesitions = false }
                 } label: {
                     Text(question)
@@ -53,7 +52,7 @@ struct ReceiverQuestionView: View {
             }
             Button{
                 withAnimation { isExpandQuesitions = false }
-                viewModel.sendSelectedStarInfo() // ここで送信
+                
             }label: {
                 Image(systemName: "xmark")
             }

@@ -111,7 +111,29 @@ extension GameCenterManager {
         broadcastPlayerAction(action)
         print("インデックス \(index) を送信しました。")
     }
+    //レシーバーからのゲーム中の情報送信
+    func sendGameInfoFromReceiver(selectedQuestion: String, isPushedAnswer: Bool) {
+    let playerId = GKLocalPlayer.local.gamePlayerID
+        let data = GameInfoFromReceiver(playerID: playerId, selectedQuestion: selectedQuestion, isPushedAnswer: isPushedAnswer)
+        broadcastGameInfoFromReceiver(data)
+        print("ゲーム情報\(data.isPushedAnswer),\(data.selectedQuestion)を送信しました。")
+    }
+    func broadcastGameInfoFromReceiver(_ info: GameInfoFromReceiver) {
+        sendData(info)
+    }
     
+    //パブリッシャーからのゲーム中の情報送信
+    func sendGameInfoFromPublisher(isLiar: Bool, isAnswered: Bool) {
+    let playerId = GKLocalPlayer.local.gamePlayerID
+        let data = GameInfoFromPublisher(playerID: playerId,isLiar: isLiar, isAnswered: isAnswered)
+        broadcastGameInfoFromPublisher(data)
+        print("ゲーム情報\(data.isLiar), \(data.isAnswered)を送信しました。")
+    }
+    func broadcastGameInfoFromPublisher(_ info: GameInfoFromPublisher) {
+        sendData(info)
+    }
+    
+    //星の情報送信
     func sendStarAzimuthAltitude(azimuth: Double, altitude: Double) {
             let playerId = GKLocalPlayer.local.gamePlayerID
             let action = PlayerAction(
