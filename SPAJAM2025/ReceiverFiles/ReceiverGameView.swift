@@ -11,20 +11,15 @@ struct ReceiverGameView: View {
     @State private var currentView:ReceiverViewIdentifier = .finding
     var body: some View {
         switch currentView {
-        case .question:
-            ReceiverQuestionView()
         case .finding:
             ReceiverFindingView()
         case .result:
             ReceiverResultView()
         }
-        
-        
     }
 }
 
 enum ReceiverViewIdentifier: String{
-    case question
     case finding
     case result
 }

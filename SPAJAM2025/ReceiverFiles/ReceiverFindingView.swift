@@ -12,6 +12,10 @@ struct ReceiverFindingView: View {
         ZStack{
             Color(red: 0.1, green: 0.1, blue: 0.4)
                 .ignoresSafeArea()
+            
+            //ARが表示されます
+            //プレイ画面のUI
+            ReceiverQuestionView()
         }
     }
 }
