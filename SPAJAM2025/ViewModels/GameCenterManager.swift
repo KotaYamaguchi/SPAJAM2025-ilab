@@ -2,11 +2,21 @@ import GameKit
 import SwiftUI
 import Combine
 
+// プレイヤーの役割を定義するEnum
+enum PlayerRole: String {
+    case publisher // 出題者
+    case receiver  // 回答者
+    case unknown   // 未定
+}
+
 // NSObjectを継承してObservableObjectに準拠
 class GameCenterManager: NSObject, ObservableObject {
     @Published var isAuthenticated = false
     @Published var currentMatch: GKMatch?
     @Published var lastReceivedAction: PlayerAction?
+    @Published var localPlayerAvatar: Image? = nil
+    @Published var opponentAvatar: Image? = nil
+    @Published var localPlayerRole: PlayerRole = .unknown // 自分の役割を保持
     
     func authenticatePlayer(completion: @escaping (Bool) -> Void) {
         GKLocalPlayer.local.authenticateHandler = { viewController, error in
@@ -24,6 +34,53 @@ class GameCenterManager: NSObject, ObservableObject {
             }
             self.isAuthenticated = GKLocalPlayer.local.isAuthenticated
             completion(self.isAuthenticated)
+        }
+    }
+    
+    func loadLocalPlayerAvatar() {
+        // 自分のアバターを読み込む
+        GKLocalPlayer.local.loadPhoto(for: .normal) { image, error in
+            if let image = image {
+                DispatchQueue.main.async {
+                    self.localPlayerAvatar = Image(uiImage: image)
+                }
+            }
+            if let error = error {
+                print("自分のアバターの読み込みエラー: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func loadOpponentAvatar(for player: GKPlayer) {
+        player.loadPhoto(for: .normal) { image, error in
+            if let image = image {
+                DispatchQueue.main.async {
+                    self.opponentAvatar = Image(uiImage: image)
+                }
+            }
+            if let error = error {
+                print("対戦相手のアバターの読み込みエラー: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    // 役割を決定する関数
+    func determinePlayerRoles() {
+        guard let match = currentMatch, let opponent = match.players.first else {
+            print("役割決定エラー: 対戦相手が見つかりません")
+            return
+        }
+        
+        let localPlayerID = GKLocalPlayer.local.gamePlayerID
+        let opponentPlayerID = opponent.gamePlayerID
+        
+        // gamePlayerIDの文字列を比較して、小さい方を "publisher" とする
+        if localPlayerID < opponentPlayerID {
+            self.localPlayerRole = .publisher
+            print("あなたの役割: 出題者 (Publisher)")
+        } else {
+            self.localPlayerRole = .receiver
+            print("あなたの役割: 回答者 (Receiver)")
         }
     }
 }
@@ -97,6 +154,12 @@ extension GameCenterManager: GKMatchDelegate {
     func match(_ match: GKMatch, player: GKPlayer, didChange state: GKPlayerConnectionState) {
         // プレイヤー接続状態の変更を処理
         print("プレイヤー \(player.displayName) の状態が変更されました: \(state.rawValue)")
+        
+        // 相手プレイヤーが接続状態になったら、アバターを読み込み、役割を決定する
+        if state == .connected {
+            loadOpponentAvatar(for: player)
+            determinePlayerRoles()
+        }
     }
 }
 
