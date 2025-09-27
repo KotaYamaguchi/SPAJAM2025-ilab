@@ -11,15 +11,29 @@ struct PublisherGameView: View {
     @State private var currentView: PublisherViewIdentifier = .starHiding
     var body: some View {
         ZStack{
+            LinearGradient(
+                
+                colors: [
+                    Color(red: 0.05, green: 0.05, blue: 0.1),
+                    Color(red: 0.1, green: 0.1, blue: 0.25),
+                    Color(red: 0.2, green: 0.4, blue: 0.5)
+                ],
+                
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
             switch currentView {
             case .starHiding:
                 StarHidingView(currentView: $currentView)
             case .receiveQuestion:
                 PublisherReceiveQuestionView()
             case .gameResult:
+                //相手が回答したフラグを受け取ったらこの画面に遷移
                 Text("結果")
-            case .waitingForQuestion:
-                Text("質問待ち")
+            case .gamePlay:
+                //星が表示されているだけの画面
+                Text("ゲームプレイ")
             }
         }
     }
@@ -27,7 +41,7 @@ struct PublisherGameView: View {
 
 enum PublisherViewIdentifier: String {
     case starHiding
-    case waitingForQuestion
+    case gamePlay
     case receiveQuestion
     case gameResult
 }

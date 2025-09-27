@@ -72,7 +72,7 @@ struct ReceiverQuestionView: View {
         Button{
             //正誤判定処理
         }label: {
-            Text("ずばり！")
+            Text("ZUBARI！")
         }
         .buttonStyle(.customThemed(backgroundColor: .yellow, foregroundColor: .black))
     }

@@ -13,8 +13,6 @@ struct PublisherReceiveQuestionView: View {
     @State private var respondMessage: String = ""
     var body: some View {
         ZStack{
-            Color(red: 0.1, green: 0.1, blue: 0.4)
-                .ignoresSafeArea()
             VStack{
                 Text("質問が届きました")
                     .foregroundStyle(.white)

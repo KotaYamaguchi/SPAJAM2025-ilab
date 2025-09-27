@@ -11,8 +11,6 @@ struct StarHidingView: View {
     @Binding var currentView: PublisherViewIdentifier
     var body: some View {
         ZStack{
-            Color(red: 0.1, green: 0.1, blue: 0.4)
-                .ignoresSafeArea()
             //背景にARを使用し，タップでダミー星を配置できるように
             VStack{
                 Spacer()
@@ -23,7 +21,7 @@ struct StarHidingView: View {
                 Spacer()
                 
                 Button{
-                    currentView = .waitingForQuestion
+                    currentView = .gamePlay
                 }label: {
                     Text("ZUBOSHIにする")
                 }
