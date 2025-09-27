@@ -13,9 +13,33 @@ struct MatchingView : View {
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
+        
         ZStack{
-            Color(red: 0.1, green: 0.1, blue: 0.4)
-                .ignoresSafeArea()
+            LinearGradient(
+                
+                colors: [
+                    Color(red: 0.05, green: 0.05, blue: 0.1),
+                    Color(red: 0.1, green: 0.1, blue: 0.25),
+                    Color(red: 0.2, green: 0.4, blue: 0.5)
+                ],
+                
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            // 画面全体に広げる
+            .ignoresSafeArea()
+            
+            GeometryReader { geometry in
+                
+                
+                StarrySkyView(
+                    starCount: 200,
+                    width: geometry.size.width,
+                    height: geometry.size.height,
+                    seed: 12345 // 固定シードで毎回同じ星空
+                )
+            }
+            
             
             VStack(spacing: 0){
 
