@@ -29,26 +29,8 @@ enum ReceiverViewIdentifier: String{
     case result
 }
 
-struct ReceiverQuestionView: View {
-    var body: some View {
-        VStack{
-            
-        }
-    }
-}
 
-struct ReceiverFindingView: View {
-    var body: some View {
-        VStack{
-            
-        }
-    }
-}
 
-struct ReceiverResultView: View {
-    var body: some View {
-        VStack{
-            
-        }
-    }
-}
+
+
+
