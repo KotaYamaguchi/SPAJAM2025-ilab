@@ -46,7 +46,7 @@ struct PublisherReceiveQuestionView: View {
                     showRespondMessage = true
                 }label:{
                     Text("正直に答える")
-                    padding()
+                        .padding()
                 }
                 
             }
