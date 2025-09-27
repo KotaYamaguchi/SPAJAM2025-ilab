@@ -1,20 +1,14 @@
-//
-//  ReceiverFindingView.swift
-//  SPAJAM2025
-//
-//  Created by Kota Yamaguchi on 2025/09/27.
-//
-
 import SwiftUI
 
 struct ReceiverFindingView: View {
-    @StateObject private var starLoader = StarLoader()
+    @ObservedObject var viewModel: ReceiverGameViewModel
+    
     var body: some View {
         ZStack{
             //ARが表示されます
-            StarGazingView(stars:$starLoader.stars)
+            StarGazingView(stars: $viewModel.starLoader.stars)
             //プレイ画面のUI
-            ReceiverQuestionView()
+            ReceiverQuestionView(viewModel: viewModel)
         }
     }
 }
