@@ -9,54 +9,48 @@ import SwiftUI
 
 struct MatchingView : View {
     
-    
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var gameCenterManager: GameCenterManager
+    @State private var isMatchingComplete = false
     
     var body: some View {
         
         ZStack{
             LinearGradient(
-                
                 colors: [
                     Color(red: 0.05, green: 0.05, blue: 0.1),
                     Color(red: 0.1, green: 0.1, blue: 0.25),
                     Color(red: 0.2, green: 0.4, blue: 0.5)
                 ],
-                
                 startPoint: .top,
                 endPoint: .bottom
             )
-            // 画面全体に広げる
             .ignoresSafeArea()
             
             GeometryReader { geometry in
-                
-                
                 StarrySkyView(
                     starCount: 200,
                     width: geometry.size.width,
                     height: geometry.size.height,
-                    seed: 12345 // 固定シードで毎回同じ星空
+                    seed: 12345
                 )
             }
-            
             
             VStack(spacing: 0){
 
                 HStack {
                     Spacer()
-                    // 三日月アイコン（SF Symbolsを使用）
                     Image(systemName: "moon.fill")
                         .resizable()
                         .frame(width: 60, height: 60)
                         .foregroundColor(.yellow)
-                        .opacity(0.6) // 少し不透明度を下げて夜空の雰囲気に
+                        .opacity(0.6)
                         .padding(.trailing, 43)
                 }.padding(.top)
                 
                 Spacer()
                 
-                VStack(spacing: 50) { // ★ テキストとローディングの間隔を50に設定
+                VStack(spacing: 50) {
                     
                     VStack{
                         Text("夜空を眺める人を募集中...")
@@ -71,21 +65,19 @@ struct MatchingView : View {
                             .padding(.bottom,50)
                     }
                     
-                    // ローディングの円（くるくる）
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: Color(red: 0.7, green: 0.7, blue: 0.8)))
-                    //ここでサイズ変更
-                        .scaleEffect(6.0) // 以前より少し大きく見せるためにスケールを調整
+                        .scaleEffect(6.0)
                 }
                 .offset(y:-60)
                 
                 Spacer()
                 
-               
-                
                 Button {
-                  dismiss()
-                    
+                    // マッチングをキャンセル
+                    gameCenterManager.disconnectFromMatch()
+                    // 画面を閉じる
+                    dismiss()
                 } label: {
                     Text("キャンセル")
                         .font(.headline)
@@ -95,15 +87,40 @@ struct MatchingView : View {
                         .foregroundColor(.white)
                         .cornerRadius(32)
                         .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
-                       
-                }.padding(.bottom)
-
-                
+                }
+                .padding(.bottom)
             }
+        }
+        .onAppear {
+            // 認証とマッチング開始
+            if !gameCenterManager.isAuthenticated {
+                gameCenterManager.authenticatePlayer { isAuthenticated in
+                    if isAuthenticated {
+                        gameCenterManager.startMatchmaking()
+                    }
+                }
+            } else {
+                gameCenterManager.startMatchmaking()
+            }
+        }
+        .onChange(of: gameCenterManager.currentMatch) { oldValue, newValue in
+            // マッチングが成功したら画面遷移
+            if newValue != nil {
+                isMatchingComplete = true
+            }
+        }
+        .fullScreenCover(isPresented: $isMatchingComplete) {
+            MatchingEnd()
+                .environmentObject(gameCenterManager)
+        }
+        .onDisappear {
+            // 画面が閉じられたときにマッチングをキャンセル
+            gameCenterManager.disconnectFromMatch()
         }
     }
 }
 
 #Preview{
     MatchingView()
+        .environmentObject(GameCenterManager())
 }

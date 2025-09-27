@@ -15,6 +15,7 @@ struct MatchStartView: View {
     
     // 現在表示するテキストの数を管理するState
     @State private var tapCount: Int = 0
+    @State private var isShowingMatchingView = false
     
     //アニメーションの速度
     let fadeIn : Double = 1.0
@@ -24,42 +25,34 @@ struct MatchStartView: View {
             ZStack{
                
                 LinearGradient(
-                  
                     colors: [
                         Color(red: 0.05, green: 0.05, blue: 0.1),
                         Color(red: 0.1, green: 0.1, blue: 0.25),
                         Color(red: 0.2, green: 0.4, blue: 0.5)
                     ],
-                   
                     startPoint: .top,
                     endPoint: .bottom
                 )
-                // 画面全体に広げる
                 .ignoresSafeArea()
                 
                 GeometryReader { geometry in
-                    
-                     
-                        StarrySkyView(
-                            starCount: 200,
-                            width: geometry.size.width,
-                            height: geometry.size.height,
-                            seed: 12345 // 固定シードで毎回同じ星空
-                        )
-                    }
-                
-                
+                    StarrySkyView(
+                        starCount: 200,
+                        width: geometry.size.width,
+                        height: geometry.size.height,
+                        seed: 12345
+                    )
+                }
                 
                 VStack(spacing: 0){
                     
                     HStack {
                         Spacer()
-                        // 三日月アイコン（SF Symbolsを使用）
                         Image(systemName: "moon.fill")
                             .resizable()
                             .frame(width: 60, height: 60)
                             .foregroundColor(.yellow)
-                            .opacity(0.6) // 少し不透明度を下げて夜空の雰囲気に
+                            .opacity(0.6)
                             .padding(.trailing, 43)
                     }
                     .padding(.top)
@@ -67,7 +60,6 @@ struct MatchStartView: View {
                     Spacer()
                     
                     if tapCount == 0 {
-                        
                         VStack{
                             Text("今夜は月が綺麗ですね")
                                 .padding(.bottom,30)
@@ -89,9 +81,10 @@ struct MatchStartView: View {
                             .font(.system(size:30))
                             .foregroundColor(.white)
                             .transition(.opacity)
-                            .transition(.opacity)
                         
-                        NavigationLink(destination: MatchingView()) {
+                        Button {
+                            isShowingMatchingView = true
+                        } label: {
                             Text("マッチングスタート")
                                 .font(.headline)
                                 .frame(width: 250)
@@ -100,18 +93,23 @@ struct MatchStartView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(32)
                                 .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
-                        } .offset(y: 100)
+                        }
+                        .offset(y: 100)
                     }
                     
                     Spacer()
-                    
                 }
-            }.onTapGesture { // Stateの変更を withAnimation で囲むことで、要素の切り替え（if文の切り替わり）にアニメーションが適用される
-                if tapCount < 1 { // 無限タップを防ぐため、1回目までのみカウント
+            }
+            .onTapGesture {
+                if tapCount < 1 {
                     withAnimation(.easeOut(duration: fadeIn)) {
                         tapCount += 1
                     }
                 }
+            }
+            .fullScreenCover(isPresented: $isShowingMatchingView) {
+                MatchingView()
+                    
             }
         }
     }
@@ -120,4 +118,3 @@ struct MatchStartView: View {
 #Preview {
     MatchStartView()
 }
-
