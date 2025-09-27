@@ -114,8 +114,10 @@ struct MatchingView : View {
                 .environmentObject(gameCenterManager)
         }
         .onDisappear {
-            // 画面が閉じられたときにマッチングをキャンセル
-            gameCenterManager.disconnectFromMatch()
+            // マッチングが成功せずに画面が閉じる場合のみ、切断処理を呼ぶ
+            if !isMatchingComplete {
+                gameCenterManager.disconnectFromMatch()
+            }
         }
     }
 }
