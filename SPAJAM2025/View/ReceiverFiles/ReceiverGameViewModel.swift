@@ -9,30 +9,14 @@ class ReceiverGameViewModel: ObservableObject {
     @Published var isPushedAnswer: Bool = false
     @Published var isCorrectAnswer: Bool = false
     @Published var lastGuessResult: String = "" // 推測結果のフィードバック用
-    
+
     // 回答者がタップして選択した星（推測）
     @Published var guessedStar: UserStar? = nil
-    
+
     @Published var starLoader = StarLoader()
-
-}
-
-struct GameInfoFromReceiver:Codable{
-    var playerID: String = ""
-    var selectedQuestion: String = ""
-    var isPushedAnswer: Bool = false
-}
-
-// MARK: - 変更点
-// Publisherからの返答内容を保持するプロパティを追加
-struct GameInfoFromPublisher:Codable{
-    var playerID: String = ""
-    var answer: String = "" // 「はい」か「いいえ」の文字列を格納
-    var isLiar :Bool = false
-    var isAnswered: Bool = false
-
-    @Published var gameCenterManager: GameCenterManager
     
+    @Published var gameCenterManager: GameCenterManager
+
     // 正解との許容誤差（度）
     private let tolerance: Double = 2.0 // 許容誤差を少し厳しくする
 
@@ -69,7 +53,7 @@ struct GameInfoFromPublisher:Codable{
             lastGuessResult = "惜しい！もう一度探してみよう"
         }
     }
-    
+
     func sendIndex(_ index: Int) {
         gameCenterManager.sendIndex(index)
         print("インデックス \(index) を送信しました。")
@@ -95,5 +79,19 @@ struct GameInfoFromPublisher:Codable{
     init(gameCenterManager: GameCenterManager) {
         self.gameCenterManager = gameCenterManager
     }
+}
 
+// This struct should not have @Published gameCenterManager or the checkGuess function anymore.
+struct GameInfoFromReceiver: Codable {
+    var playerID: String = ""
+    var selectedQuestion: String = ""
+    var isPushedAnswer: Bool = false
+}
+
+// This struct should only be simple data, not logic.
+struct GameInfoFromPublisher: Codable {
+    var playerID: String = ""
+    var answer: String = "" // 「はい」か「いいえ」の文字列を格納
+    var isLiar: Bool = false
+    var isAnswered: Bool = false
 }
