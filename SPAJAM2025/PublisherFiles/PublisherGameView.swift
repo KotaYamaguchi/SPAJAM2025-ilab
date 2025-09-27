@@ -8,11 +8,31 @@
 import SwiftUI
 //出題者側のゲームプレイ画面です．
 struct PublisherGameView: View {
+    @State private var currentView: PublisherViewIdentifier = .starHiding
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack{
+            switch currentView {
+            case .starHiding:
+                StarHidingView(currentView: $currentView)
+            case .receiveQuestion:
+                Text("質問")
+            case .gameResult:
+                Text("結果")
+            case .waitingForQuestion:
+                Text("質問待ち")
+            }
+        }
     }
 }
 
+enum PublisherViewIdentifier: String {
+    case starHiding
+    case waitingForQuestion
+    case receiveQuestion
+    case gameResult
+}
 #Preview {
     PublisherGameView()
 }
+
+
