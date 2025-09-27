@@ -8,6 +8,7 @@
 import SwiftUI
 //出題者側のゲームプレイ画面です．
 struct PublisherGameView: View {
+    @EnvironmentObject var gameCenterManager: GameCenterManager
     @State private var currentView: PublisherViewIdentifier = .starHiding
     
     //送信するデータ
@@ -32,6 +33,9 @@ struct PublisherGameView: View {
                 endPoint: .bottom
             )
             .ignoresSafeArea()
+            
+            
+            
             switch currentView {
             case .starHiding:
                 StarHidingView(currentView: $currentView)
@@ -43,6 +47,12 @@ struct PublisherGameView: View {
             case .gamePlay:
                 //星が表示されているだけの画面
                 Text("ゲームプレイ")
+            }
+        }
+        .fullScreenCover(isPresented: .constant(gameCenterManager.gameOutcome != nil)) {
+            if let outcome = gameCenterManager.gameOutcome {
+                GameResultView(outcome: outcome)
+                    .environmentObject(gameCenterManager)
             }
         }
     }
