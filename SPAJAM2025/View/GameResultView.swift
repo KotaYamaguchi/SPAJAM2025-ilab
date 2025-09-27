@@ -28,17 +28,17 @@ struct GameResultView: View {
                         .font(.system(size: 60, weight: .bold, design: .rounded))
                         .foregroundColor(.gray)
                 }
+                Button{
+                    gameCenterManager.isGameFinished = true
+                    gameCenterManager.disconnectFromMatch()
+                }label: {
+                    Text("タイトルに戻る")
+                        .font(.system(size: 60, weight: .bold, design: .rounded))
+                        .foregroundColor(.gray)
+                }
             }
-        }
-        .onAppear {
-            // このViewが表示されたらすぐにマッチを切断
             
             
-            // 5秒後に isGameFinished を true にしてタイトルに戻る
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                gameCenterManager.isGameFinished = true
-                gameCenterManager.disconnectFromMatch()
-            }
         }
         .navigationBarBackButtonHidden(true)
     }
