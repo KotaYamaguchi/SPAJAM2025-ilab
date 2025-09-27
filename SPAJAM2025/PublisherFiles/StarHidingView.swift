@@ -25,7 +25,7 @@ struct StarHidingView: View {
                 Button{
                     currentView = .waitingForQuestion
                 }label: {
-                    Text("これで決定！")
+                    Text("ZUBOSHIにする")
                 }
                 .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black,width: 200))
 //                .disabled(true)

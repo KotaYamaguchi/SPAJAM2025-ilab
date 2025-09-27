@@ -11,9 +11,7 @@ struct ReceiverQuestionView: View {
     @State private var isExpandQuesitions:Bool = false
     @State private var isSelectedStar:Bool = true
     var body: some View {
-        ZStack{
-            Color(red: 0.1, green: 0.1, blue: 0.4)
-                .ignoresSafeArea()
+        
             VStack{
                 Spacer()
                 if isExpandQuesitions{
@@ -25,7 +23,6 @@ struct ReceiverQuestionView: View {
                     askButton()
                 }
             }
-        }
         
     }
     
