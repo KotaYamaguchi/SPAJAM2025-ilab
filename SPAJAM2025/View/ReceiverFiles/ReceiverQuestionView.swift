@@ -2,9 +2,14 @@ import SwiftUI
 
 struct ReceiverQuestionView: View {
     @ObservedObject var viewModel: ReceiverGameViewModel
+    @EnvironmentObject var gameCenterManager: GameCenterManager
+    
     @State private var isExpandQuesitions: Bool = false
     @State private var isSelectedStar: Bool = false
     @State private var displayedQuestions: [String] = []
+    
+    // MARK: - 追加①: Publisherの返答を表示するためのState変数
+    @State private var publisherAnswer: String? = nil
 
     let questions: [String] = [
         "空の真上に近い位置に見えますか？",
@@ -21,17 +26,61 @@ struct ReceiverQuestionView: View {
     ]
 
     var body: some View {
-        VStack {
-            Spacer()
-            if isExpandQuesitions {
-                questionList()
-            } else {
-                if isSelectedStar {
-                    answerButton()
+        ZStack { // ZStackを追加してオーバーレイを可能に
+            VStack {
+                Spacer()
+                if isExpandQuesitions {
+                    questionList()
+                } else {
+                    if isSelectedStar {
+                        answerButton()
+                    }
+                    askButton()
                 }
-                askButton()
+            }
+            // MARK: - 追加②: 返答を表示するオーバーレイUI
+            if let answer = publisherAnswer {
+                answerOverlayView(answer: answer)
             }
         }
+        // MARK: - 追加③: GameCenterManagerからのデータ受信を監視
+        .onReceive(gameCenterManager.$lastReceivedGameInfoFromPublisher) { gameInfo in
+            guard let info = gameInfo, info.isAnswered else { return }
+            
+            // 回答を表示
+            self.publisherAnswer = info.answer
+            
+            // 3秒後に回答を非表示にする
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                self.publisherAnswer = nil
+            }
+        }
+    }
+    
+    // MARK: - 追加④: Publisherの返答を表示するためのView
+    @ViewBuilder
+    private func answerOverlayView(answer: String) -> some View {
+        ZStack {
+            Color.black.opacity(0.4).ignoresSafeArea()
+            
+            VStack {
+                Text("相手の返事")
+                    .font(.title2)
+                    .foregroundColor(.white.opacity(0.8))
+                
+                Text(answer)
+                    .font(.system(size: 80, weight: .bold))
+                    .foregroundColor(answer == "はい" ? .cyan : .pink)
+                    .shadow(color: .black.opacity(0.5), radius: 5, x: 0, y: 5)
+            }
+            .padding(40)
+            .background(
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Material.ultraThin)
+            )
+            .transition(.scale.combined(with: .opacity))
+        }
+        .zIndex(10) // 他のUIより手前に表示
     }
 
     private func selectRandomQuestions() {
@@ -41,8 +90,10 @@ struct ReceiverQuestionView: View {
     @ViewBuilder func questionList() -> some View {
         VStack(spacing:10){
             ForEach(displayedQuestions, id: \.self) { question in
-                Button {
+                Button{
                     viewModel.selectedQuestion = question
+                    // Game Center経由で質問内容を送信
+                    gameCenterManager.sendGameInfoFromReceiver(selectedQuestion: question, isPushedAnswer: false)
                     print("質問を送信: \(question)")
                     withAnimation { isExpandQuesitions = false }
                 } label: {
@@ -52,7 +103,6 @@ struct ReceiverQuestionView: View {
             }
             Button{
                 withAnimation { isExpandQuesitions = false }
-                
             }label: {
                 Image(systemName: "xmark")
             }
@@ -73,6 +123,8 @@ struct ReceiverQuestionView: View {
     @ViewBuilder func answerButton() -> some View {
         Button{
             viewModel.isPushedAnswer = true
+            // 回答ボタンを押した場合の送信も必要ならここで送る
+            gameCenterManager.sendGameInfoFromReceiver(selectedQuestion: viewModel.selectedQuestion, isPushedAnswer: true)
         }label: {
             Text("ZUBARI！")
         }

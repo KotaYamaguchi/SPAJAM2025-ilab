@@ -1,4 +1,4 @@
-//
+
 //  PublisherGameView.swift
 //  SPAJAM2025
 //
@@ -9,7 +9,11 @@ import SwiftUI
 //出題者側のゲームプレイ画面です．
 struct PublisherGameView: View {
     @State private var currentView: PublisherViewIdentifier = .starHiding
+    // MARK: - 追加①: GameCenterManagerを環境オブジェクトとして利用
+    @EnvironmentObject var gameCenterManager: GameCenterManager
     
+    // MARK: - 追加②: 受信した質問を保持するState変数
+    @State private var receivedQuestion: String = ""
     //送信するデータ
     //出題者に送信する「はい」「いいえ」のString
     @State private var isAnsweredQuestion: Bool = false
@@ -35,13 +39,25 @@ struct PublisherGameView: View {
             case .starHiding:
                 StarHidingView(currentView: $currentView)
             case .receiveQuestion:
-                PublisherReceiveQuestionView()
+                // MARK: - 変更点①: PublisherReceiveQuestionViewに受信した質問とcurrentViewのBindingを渡す
+                PublisherReceiveQuestionView(
+                    questionText: receivedQuestion,
+                    currentView: $currentView
+                )
             case .gameResult:
-                //相手が回答したフラグを受け取ったらこの画面に遷移
                 Text("結果")
             case .gamePlay:
-                //星が表示されているだけの画面
                 Text("ゲームプレイ")
+            }
+        }
+        // MARK: - 追加③: GameCenterManagerからのデータ受信を監視
+        .onReceive(gameCenterManager.$lastReceivedGameInfoFromReceiver) { gameInfo in
+            guard let info = gameInfo else { return }
+            
+            // isPushedAnswerがfalseの場合（= 質問が来た場合）のみ処理
+            if !info.isPushedAnswer {
+                self.receivedQuestion = info.selectedQuestion
+                self.currentView = .receiveQuestion
             }
         }
     }

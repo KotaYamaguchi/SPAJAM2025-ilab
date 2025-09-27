@@ -18,6 +18,11 @@ class GameCenterManager: NSObject, ObservableObject {
     @Published var opponentAvatar: Image? = nil
     @Published var localPlayerRole: PlayerRole = .unknown // 自分の役割を保持
     
+    // MARK: - 変更点①: 受信したゲーム情報データを保持するプロパティを追加
+       @Published var lastReceivedGameInfoFromReceiver: GameInfoFromReceiver?
+       @Published var lastReceivedGameInfoFromPublisher: GameInfoFromPublisher?
+    
+    
     func authenticatePlayer(completion: @escaping (Bool) -> Void) {
         GKLocalPlayer.local.authenticateHandler = { viewController, error in
             if let viewController = viewController {
@@ -185,13 +190,26 @@ extension GameCenterManager {
         sendData(info)
     }
     
-    //パブリッシャーからのゲーム中の情報送信
-    func sendGameInfoFromPublisher(isLiar: Bool, isAnswered: Bool) {
-    let playerId = GKLocalPlayer.local.gamePlayerID
-        let data = GameInfoFromPublisher(playerID: playerId,isLiar: isLiar, isAnswered: isAnswered)
-        broadcastGameInfoFromPublisher(data)
-        print("ゲーム情報\(data.isLiar), \(data.isAnswered)を送信しました。")
-    }
+    // MARK: - 変更点②: 送信メソッドの引数を更新
+      func sendGameInfoFromPublisher(answer: String, isLiar: Bool, isAnswered: Bool) {
+          guard let match = currentMatch else {
+              print("エラー: 現在のマッチがありません。")
+              return
+          }
+
+          var gameInfo = GameInfoFromPublisher()
+          gameInfo.playerID = GKLocalPlayer.local.gamePlayerID
+          gameInfo.answer = answer
+          gameInfo.isLiar = isLiar
+          gameInfo.isAnswered = isAnswered
+
+          do {
+              let data = try JSONEncoder().encode(gameInfo)
+              try match.sendData(toAllPlayers: data, with: .reliable)
+          } catch {
+              print("GameInfoFromPublisherの送信エラー: \(error)")
+          }
+      }
     func broadcastGameInfoFromPublisher(_ info: GameInfoFromPublisher) {
         sendData(info)
     }
@@ -217,17 +235,54 @@ extension GameCenterManager {
         sendData(action)
     }
     
-    private func handleReceivedData(_ data: Data) {
-        do {
-            let action = try JSONDecoder().decode(PlayerAction.self, from: data)
-            DispatchQueue.main.async {
-                self.processPlayerAction(action)
+    // MARK: - 変更点③: 受信データ処理を拡張
+        private func handleReceivedData(_ data: Data) {
+            
+            // GameInfoFromPublisherとしてデコードを試みる
+            do {
+                let gameInfo = try JSONDecoder().decode(GameInfoFromPublisher.self, from: data)
+                DispatchQueue.main.async {
+                    self.processGameInfoFromPublisher(gameInfo)
+                }
+                return
+            } catch {
+                // デコード失敗時は次のデータ型を試す
             }
-        } catch {
-            print("データデコードエラー: \(error)")
+            
+            // GameInfoFromReceiverとしてデコードを試みる
+            do {
+                let gameInfo = try JSONDecoder().decode(GameInfoFromReceiver.self, from: data)
+                DispatchQueue.main.async {
+                    self.processGameInfoFromReceiver(gameInfo)
+                }
+                return
+            } catch {
+                // デコード失敗時は次のデータ型を試す
+            }
+            
+            // PlayerActionとしてデコードを試みる
+            do {
+                let action = try JSONDecoder().decode(PlayerAction.self, from: data)
+                DispatchQueue.main.async {
+                    self.processPlayerAction(action)
+                }
+                return
+            } catch {
+                // デコード失敗時は何もしない
+            }
+            
+            print("受信したデータをどの型にもデコードできませんでした。")
         }
-    }
-    
+        
+        private func processGameInfoFromPublisher(_ info: GameInfoFromPublisher) {
+            self.lastReceivedGameInfoFromPublisher = info
+            print("受信した返答: \(info.answer), 嘘: \(info.isLiar)")
+        }
+        
+        private func processGameInfoFromReceiver(_ info: GameInfoFromReceiver) {
+            self.lastReceivedGameInfoFromReceiver = info
+            print("受信した質問: \(info.selectedQuestion)")
+        }
     private func processPlayerAction(_ action: PlayerAction) {
             self.lastReceivedAction = action
             
