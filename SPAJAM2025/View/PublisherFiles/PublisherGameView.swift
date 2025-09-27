@@ -1,4 +1,4 @@
-//
+
 //  PublisherGameView.swift
 //  SPAJAM2025
 //
@@ -10,14 +10,17 @@ import SwiftUI
 struct PublisherGameView: View {
     @EnvironmentObject var gameCenterManager: GameCenterManager
     @State private var currentView: PublisherViewIdentifier = .starHiding
+    // MARK: - 追加①: GameCenterManagerを環境オブジェクトとして利用
+    @EnvironmentObject var gameCenterManager: GameCenterManager
     
+    // MARK: - 追加②: 受信した質問を保持するState変数
+    @State private var receivedQuestion: String = ""
     //送信するデータ
-    //出題者に送信する質問の文字列
+    //出題者に送信する「はい」「いいえ」のString
     @State private var isAnsweredQuestion: Bool = false
-    //出題者に送信する星の情報，インデックスなのかUUIDなのかたいし判断
-    @State private var hideStarInfo: String = ""
-    //ZUBARIボタンを押されたことを受け取り，正誤判定を行うことを通知
-    @State private var isPushedAnswer: Bool = false
+    //回答したことを伝えるフラグ
+    @State private var isAnsweredFlag: Bool = false
+    
     //送信するデータここまで
     var body: some View {
         ZStack{
@@ -40,21 +43,34 @@ struct PublisherGameView: View {
             case .starHiding:
                 StarHidingView(currentView: $currentView)
             case .receiveQuestion:
-                PublisherReceiveQuestionView()
+                // MARK: - 変更点①: PublisherReceiveQuestionViewに受信した質問とcurrentViewのBindingを渡す
+                PublisherReceiveQuestionView(
+                    questionText: receivedQuestion,
+                    currentView: $currentView
+                )
             case .gameResult:
-                //相手が回答したフラグを受け取ったらこの画面に遷移
                 Text("結果")
             case .gamePlay:
-                //星が表示されているだけの画面
                 Text("ゲームプレイ")
             }
         }
-        .fullScreenCover(isPresented: .constant(gameCenterManager.gameOutcome != nil)) {
+              .fullScreenCover(isPresented: .constant(gameCenterManager.gameOutcome != nil)) {
             if let outcome = gameCenterManager.gameOutcome {
                 GameResultView(outcome: outcome)
                     .environmentObject(gameCenterManager)
+
             }
         }
+
+        // MARK: - 追加③: GameCenterManagerからのデータ受信を監視
+        .onReceive(gameCenterManager.$lastReceivedGameInfoFromReceiver) { gameInfo in
+            guard let info = gameInfo else { return }
+            
+            // isPushedAnswerがfalseの場合（= 質問が来た場合）のみ処理
+            if !info.isPushedAnswer {
+                self.receivedQuestion = info.selectedQuestion
+                self.currentView = .receiveQuestion
+
     }
 }
 

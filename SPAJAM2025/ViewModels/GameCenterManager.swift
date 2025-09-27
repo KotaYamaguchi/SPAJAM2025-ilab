@@ -27,6 +27,11 @@ class GameCenterManager: NSObject, ObservableObject {
     @Published var gameOutcome: GameOutcome? = nil // ゲームの勝敗結果
     @Published var isGameFinished = false // ゲームが終了しタイトルに戻るべきか
     
+    // MARK: - 変更点①: 受信したゲーム情報データを保持するプロパティを追加
+       @Published var lastReceivedGameInfoFromReceiver: GameInfoFromReceiver?
+       @Published var lastReceivedGameInfoFromPublisher: GameInfoFromPublisher?
+    
+    
     func authenticatePlayer(completion: @escaping (Bool) -> Void) {
         GKLocalPlayer.local.authenticateHandler = { viewController, error in
             if let viewController = viewController {
@@ -202,7 +207,42 @@ extension GameCenterManager {
         broadcastPlayerAction(action)
         print("インデックス \(index) を送信しました。")
     }
+    //レシーバーからのゲーム中の情報送信
+    func sendGameInfoFromReceiver(selectedQuestion: String, isPushedAnswer: Bool) {
+    let playerId = GKLocalPlayer.local.gamePlayerID
+        let data = GameInfoFromReceiver(playerID: playerId, selectedQuestion: selectedQuestion, isPushedAnswer: isPushedAnswer)
+        broadcastGameInfoFromReceiver(data)
+        print("ゲーム情報\(data.isPushedAnswer),\(data.selectedQuestion)を送信しました。")
+    }
+    func broadcastGameInfoFromReceiver(_ info: GameInfoFromReceiver) {
+        sendData(info)
+    }
     
+    // MARK: - 変更点②: 送信メソッドの引数を更新
+      func sendGameInfoFromPublisher(answer: String, isLiar: Bool, isAnswered: Bool) {
+          guard let match = currentMatch else {
+              print("エラー: 現在のマッチがありません。")
+              return
+          }
+
+          var gameInfo = GameInfoFromPublisher()
+          gameInfo.playerID = GKLocalPlayer.local.gamePlayerID
+          gameInfo.answer = answer
+          gameInfo.isLiar = isLiar
+          gameInfo.isAnswered = isAnswered
+
+          do {
+              let data = try JSONEncoder().encode(gameInfo)
+              try match.sendData(toAllPlayers: data, with: .reliable)
+          } catch {
+              print("GameInfoFromPublisherの送信エラー: \(error)")
+          }
+      }
+    func broadcastGameInfoFromPublisher(_ info: GameInfoFromPublisher) {
+        sendData(info)
+    }
+    
+    //星の情報送信
     func sendStarAzimuthAltitude(azimuth: Double, altitude: Double) {
             let playerId = GKLocalPlayer.local.gamePlayerID
             let action = PlayerAction(
@@ -223,17 +263,54 @@ extension GameCenterManager {
         sendData(action)
     }
     
-    private func handleReceivedData(_ data: Data) {
-        do {
-            let action = try JSONDecoder().decode(PlayerAction.self, from: data)
-            DispatchQueue.main.async {
-                self.processPlayerAction(action)
+    // MARK: - 変更点③: 受信データ処理を拡張
+        private func handleReceivedData(_ data: Data) {
+            
+            // GameInfoFromPublisherとしてデコードを試みる
+            do {
+                let gameInfo = try JSONDecoder().decode(GameInfoFromPublisher.self, from: data)
+                DispatchQueue.main.async {
+                    self.processGameInfoFromPublisher(gameInfo)
+                }
+                return
+            } catch {
+                // デコード失敗時は次のデータ型を試す
             }
-        } catch {
-            print("データデコードエラー: \(error)")
+            
+            // GameInfoFromReceiverとしてデコードを試みる
+            do {
+                let gameInfo = try JSONDecoder().decode(GameInfoFromReceiver.self, from: data)
+                DispatchQueue.main.async {
+                    self.processGameInfoFromReceiver(gameInfo)
+                }
+                return
+            } catch {
+                // デコード失敗時は次のデータ型を試す
+            }
+            
+            // PlayerActionとしてデコードを試みる
+            do {
+                let action = try JSONDecoder().decode(PlayerAction.self, from: data)
+                DispatchQueue.main.async {
+                    self.processPlayerAction(action)
+                }
+                return
+            } catch {
+                // デコード失敗時は何もしない
+            }
+            
+            print("受信したデータをどの型にもデコードできませんでした。")
         }
-    }
-    
+        
+        private func processGameInfoFromPublisher(_ info: GameInfoFromPublisher) {
+            self.lastReceivedGameInfoFromPublisher = info
+            print("受信した返答: \(info.answer), 嘘: \(info.isLiar)")
+        }
+        
+        private func processGameInfoFromReceiver(_ info: GameInfoFromReceiver) {
+            self.lastReceivedGameInfoFromReceiver = info
+            print("受信した質問: \(info.selectedQuestion)")
+        }
     private func processPlayerAction(_ action: PlayerAction) {
             self.lastReceivedAction = action
             

@@ -1,18 +1,17 @@
-//
-//  answerQuestionButtonを押した後，「はい」「いいえ」を選択するボタンを表示する．ボタンを押すと，相手ユーザーにどちらを選んだかを送信する．
-//  SPAJAM2025
-//  このUIを実装してください．
-//  Created by Kota Yamaguchi on 2025/09/27.
-//
-
 import SwiftUI
 
 struct PublisherReceiveQuestionView: View {
+    // MARK: - 追加①: GameCenterManagerを環境オブジェクトとして利用
+    @EnvironmentObject var gameCenterManager: GameCenterManager
+
+    // MARK: - 変更点①: 親Viewからデータを受け取るプロパティ
+    let questionText: String
+    @Binding var currentView: PublisherViewIdentifier
+
     @State private var isLier: Bool = false
     @State private var showRespondMessage: Bool = false
     @State private var respondMessage: String = ""
     @State private var canLieCount: Int = 2
-    @State private var questionText: String = "オリオン座の近くにありますか？"
     @State private var showYesNoButtons: Bool = false
     
     var body: some View {
@@ -28,6 +27,7 @@ struct PublisherReceiveQuestionView: View {
                         .shadow(radius: 10)
                     Text(questionText)
                         .font(.system(size: 20))
+                        .padding()
                 }
                 Spacer()
                 if showRespondMessage{
@@ -44,54 +44,42 @@ struct PublisherReceiveQuestionView: View {
     @ViewBuilder
     func answerQuestionButton() -> some View {
         VStack{
-            HStack{
-                ZStack(alignment:.topTrailing){
-                    Button{
-                        respondMessage = "バレないようにね..."
-                        isLier = true
-                        showRespondMessage = true
-                        showYesNoButtons = true
-                        // 回数はここで減らさない
-                    }label:{
-                        Text("嘘をつく")
-                    }
-                    .buttonStyle(.customThemed(
-                        backgroundColor: canLieCount > 0 ? .blue : .gray.opacity(0.5),
-                        foregroundColor: .white,
-                        width: 100)
-                    )
-                    .disabled(canLieCount == 0)
-                    
-                    Text("\(canLieCount)回")
-                        .padding(10)
-                        .background{
-                            RoundedRectangle(cornerRadius: 50)
-                                .foregroundStyle(.white)
-                        }
-                        .offset(x:10,y:-10)
-                        .shadow(radius: 5)
-                        
-                }
-                Button{
-                    respondMessage = "正直が一番だよね..."
-                    isLier = false
-                    showRespondMessage = true
-                    showYesNoButtons = true
-                }label:{
-                    Text("正直に答える")
-                }
-                .buttonStyle(.customThemed(backgroundColor: .green, foregroundColor: .white,width: 100))
+            Button{
+                showRespondMessage = true
+            }label: {
+                Text("回答する")
             }
+            .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black,width: 200))
         }
     }
-    
     @ViewBuilder
     func respondingQuestion() -> some View {
-        VStack {
-            Spacer()
+        VStack(spacing: 20) {
             Text(respondMessage)
+                .foregroundStyle(.white)
                 .font(.system(size: 20))
-                .padding(.bottom, 30)
+            
+            HStack(spacing: 30) {
+                Button {
+                    isLier = true
+                    respondMessage = "嘘をついて答える"
+                    showYesNoButtons = true
+                } label: {
+                    Text("嘘をつく")
+                }
+                .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 140))
+                .disabled(canLieCount <= 0)
+                
+                Button {
+                    isLier = false
+                    respondMessage = "正直に答える"
+                    showYesNoButtons = true
+                } label: {
+                    Text("正直に答える")
+                }
+                .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 140))
+            }
+            .padding(.horizontal)
             
             if showYesNoButtons {
                 VStack(spacing: 16) {
@@ -102,6 +90,7 @@ struct PublisherReceiveQuestionView: View {
                             }
                             sendAnswerToOpponent(answer: "はい", isLie: isLier)
                             resetToInitial()
+                            currentView = .gamePlay
                         } label: {
                             Text("はい")
                                 .frame(width: 90, height: 44)
@@ -115,6 +104,7 @@ struct PublisherReceiveQuestionView: View {
                             }
                             sendAnswerToOpponent(answer: "いいえ", isLie: isLier)
                             resetToInitial()
+                            currentView = .gamePlay
                         } label: {
                             Text("いいえ")
                                 .frame(width: 90, height: 44)
@@ -123,9 +113,7 @@ struct PublisherReceiveQuestionView: View {
                         .buttonStyle(.customThemed(backgroundColor: .pink, foregroundColor: .white, width: 90))
                     }
                     
-                    // × ボタン（はい・いいえボタンの下中央）
                     Button(action: {
-                        // 一つ前（嘘をつく・正直に答えるボタン画面）へ戻す
                         showRespondMessage = false
                         showYesNoButtons = false
                     }) {
@@ -142,8 +130,10 @@ struct PublisherReceiveQuestionView: View {
         }
     }
     
+    // MARK: - 変更点
+    // GameCenterManager経由で回答を送信する
     func sendAnswerToOpponent(answer: String, isLie: Bool) {
-        // TODO: 実際の通信処理に置き換える
+        gameCenterManager.sendGameInfoFromPublisher(answer: answer, isLiar: isLie, isAnswered: true)
         print("相手に送信: 答え=\(answer), 嘘=\(isLie ? "YES" : "NO")")
     }
     
@@ -152,8 +142,4 @@ struct PublisherReceiveQuestionView: View {
         showYesNoButtons = false
         respondMessage = ""
     }
-}
-
-#Preview {
-    PublisherReceiveQuestionView()
 }
