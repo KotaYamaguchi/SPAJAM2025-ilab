@@ -17,7 +17,7 @@ struct TitleView: View {
             .cornerRadius(10)
         
         NavigationLink{
-            MachingView()
+            MatchingView()
         }label: {
             Text("ゲームを始める")
         }

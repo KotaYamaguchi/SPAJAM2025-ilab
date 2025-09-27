@@ -12,21 +12,32 @@ struct PublisherReceiveQuestionView: View {
     @State private var showRespondMessage: Bool = false
     @State private var respondMessage: String = ""
     var body: some View {
-        VStack{
-            Text("質問が届きました")
-            ZStack{
-                RoundedRectangle(cornerRadius: 20)
-                    .frame(width: 300,height: 100)
+        ZStack{
+            Color(red: 0.1, green: 0.1, blue: 0.4)
+                .ignoresSafeArea()
+            VStack{
+                Text("質問が届きました")
                     .foregroundStyle(.white)
-                    .shadow(radius: 10)
-                Text("オリオン座の近くにありますか？")
+                    .font(.system(size: 20))
+                ZStack{
+                    RoundedRectangle(cornerRadius: 50)
+                        .frame(maxWidth: 350,maxHeight: 100)
+                        .foregroundStyle(.white)
+                        .shadow(radius: 10)
+                    Text("オリオン座の近くにありますか？")
+                        .font(.system(size: 20))
+                }
+                Spacer()
+                if showRespondMessage{
+                    respondingQuestion()
+                    Spacer()
+                }else{
+                    answerQuestionButton()
+                }
             }
-            if showRespondMessage{
-                respondingQuestion()
-            }else{
-                answerQuestionButton()
-            }
+            .padding(.vertical,60)
         }
+        
     }
     @ViewBuilder func answerQuestionButton() -> some View {
         VStack{
@@ -37,8 +48,8 @@ struct PublisherReceiveQuestionView: View {
                     showRespondMessage = true
                 }label:{
                     Text("嘘をつく")
-                        .padding()
                 }
+                .buttonStyle(.customThemed(backgroundColor: .blue, foregroundColor: .white,width: 100))
                 
                 Button{
                     respondMessage = "正直が一番だよね..."
@@ -46,15 +57,24 @@ struct PublisherReceiveQuestionView: View {
                     showRespondMessage = true
                 }label:{
                     Text("正直に答える")
-                        .padding()
                 }
-                
+                .buttonStyle(.customThemed(backgroundColor: .green, foregroundColor: .white,width: 100))
             }
         }
     }
     @ViewBuilder func respondingQuestion() -> some View {
-        Text(respondMessage)
-            .font(.title)
+        VStack{
+            Spacer()
+            Text(respondMessage)
+                .font(.system(size: 20))
+            Spacer()
+            Button{
+                showRespondMessage = false
+            }label: {
+                Text("答え終わった")
+            }
+            .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black,width: 100))
+        }
     }
 }
 
