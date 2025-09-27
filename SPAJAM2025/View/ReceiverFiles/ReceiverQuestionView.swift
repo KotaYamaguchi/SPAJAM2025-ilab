@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ReceiverQuestionView: View {
     @ObservedObject var viewModel: ReceiverGameViewModel
-
+    
     @EnvironmentObject var gameCenterManager: GameCenterManager
     
     @State private var isExpandQuesitions: Bool = false
@@ -11,7 +11,7 @@ struct ReceiverQuestionView: View {
     
     // MARK: - 追加①: Publisherの返答を表示するためのState変数
     @State private var publisherAnswer: String? = nil
-
+    
     let questions: [String] = [
         "空の真上に近い位置に見えますか？",
         "北の空に見えますか？",
@@ -25,17 +25,43 @@ struct ReceiverQuestionView: View {
         "近くに，赤やオレンジ色に見える星がありますか？",
         "金星や木星と近くにありますか？",
     ]
-
+    
     var body: some View {
         ZStack { // ZStackを追加してオーバーレイを可能に
+            if let guessedStarName = viewModel.guessedStar?.name {
+                Text("選択中の星: \(guessedStarName)")
+                    .foregroundColor(.green)
+                    .padding()
+                    .background(Color.black.opacity(0.7))
+                    .cornerRadius(10)
+                    .padding(.bottom, 5)
+            }
+            
+            // 推測結果のフィードバックを表示
+            if !viewModel.lastGuessResult.isEmpty {
+                Text(viewModel.lastGuessResult)
+                    .font(.title2)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.black.opacity(0.7))
+                    .cornerRadius(10)
+                    .transition(.opacity)
+                    .onAppear {
+                        // 2秒後にメッセージを消す
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            viewModel.lastGuessResult = ""
+                        }
+                    }
+                
+            }
             VStack {
                 Spacer()
                 if isExpandQuesitions {
                     questionList()
                 } else {
-                    if isSelectedStar {
+                    
                         answerButton()
-                    }
+                    
                     askButton()
                 }
             }
@@ -83,11 +109,11 @@ struct ReceiverQuestionView: View {
         }
         .zIndex(10) // 他のUIより手前に表示
     }
-
+    
     private func selectRandomQuestions() {
         displayedQuestions = questions.shuffled().prefix(3).map { $0 }
     }
-
+    
     @ViewBuilder func questionList() -> some View {
         VStack(spacing:10){
             ForEach(displayedQuestions, id: \.self) { question in
@@ -101,55 +127,11 @@ struct ReceiverQuestionView: View {
                     Text(question)
                 }
                 .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
-
-
-    var body: some View {
-        VStack {
-            Spacer()
-            
-            // 選択中の星の名前を表示
-            if let guessedStarName = viewModel.guessedStar?.name {
-                Text("選択中の星: \(guessedStarName)")
-                    .foregroundColor(.green)
-                    .padding()
-                    .background(Color.black.opacity(0.7))
-                    .cornerRadius(10)
-                    .padding(.bottom, 5)
             }
-            
-            // 推測結果のフィードバックを表示
-            if !viewModel.lastGuessResult.isEmpty {
-                Text(viewModel.lastGuessResult)
-                    .font(.title2)
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.black.opacity(0.7))
-                    .cornerRadius(10)
-                    .transition(.opacity)
-                    .onAppear {
-                        // 2秒後にメッセージを消す
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            viewModel.lastGuessResult = ""
-                        }
-                    }
-
-            }
-            
-            // ZUBARIボタン
-            Button{
-
-                withAnimation { isExpandQuesitions = false }
-
-                viewModel.checkGuess()
-
-            }label: {
-                Text("ZUBARI！")
-            }
-
-            .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 30))
         }
     }
-
+    
+    
     @ViewBuilder func askButton() -> some View {
         Button{
             selectRandomQuestions()
@@ -159,19 +141,20 @@ struct ReceiverQuestionView: View {
         }
         .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
     }
-
+    
     @ViewBuilder func answerButton() -> some View {
         Button{
-            viewModel.isPushedAnswer = true
             // 回答ボタンを押した場合の送信も必要ならここで送る
-            gameCenterManager.sendGameInfoFromReceiver(selectedQuestion: viewModel.selectedQuestion, isPushedAnswer: true)
+            withAnimation { isExpandQuesitions = false }
+            
+            viewModel.checkGuess()
         }label: {
             Text("ZUBARI！")
-
-            .buttonStyle(.customThemed(backgroundColor: .yellow, foregroundColor: .black))
-            .disabled(viewModel.guessedStar == nil) // 星が選択されていない場合は無効
-            .padding(.bottom, 30)
-
+            
+                .buttonStyle(.customThemed(backgroundColor: .yellow, foregroundColor: .black))
+                .disabled(viewModel.guessedStar == nil) // 星が選択されていない場合は無効
+                .padding(.bottom, 30)
+            
         }
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 //出題者側のゲームプレイ画面です．
 struct PublisherGameView: View {
-    @EnvironmentObject var gameCenterManager: GameCenterManager
+
     @State private var currentView: PublisherViewIdentifier = .starHiding
     // MARK: - 追加①: GameCenterManagerを環境オブジェクトとして利用
     @EnvironmentObject var gameCenterManager: GameCenterManager
@@ -54,14 +54,14 @@ struct PublisherGameView: View {
                 Text("ゲームプレイ")
             }
         }
-              .fullScreenCover(isPresented: .constant(gameCenterManager.gameOutcome != nil)) {
+        .fullScreenCover(isPresented: .constant(gameCenterManager.gameOutcome != nil)) {
             if let outcome = gameCenterManager.gameOutcome {
                 GameResultView(outcome: outcome)
                     .environmentObject(gameCenterManager)
-
+                
             }
         }
-
+        
         // MARK: - 追加③: GameCenterManagerからのデータ受信を監視
         .onReceive(gameCenterManager.$lastReceivedGameInfoFromReceiver) { gameInfo in
             guard let info = gameInfo else { return }
@@ -70,7 +70,9 @@ struct PublisherGameView: View {
             if !info.isPushedAnswer {
                 self.receivedQuestion = info.selectedQuestion
                 self.currentView = .receiveQuestion
-
+                
+            }
+        }
     }
 }
 
