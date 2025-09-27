@@ -15,7 +15,7 @@ struct PublisherGameView: View {
             case .starHiding:
                 StarHidingView(currentView: $currentView)
             case .receiveQuestion:
-                Text("質問")
+                PublisherReceiveQuestionView()
             case .gameResult:
                 Text("結果")
             case .waitingForQuestion:

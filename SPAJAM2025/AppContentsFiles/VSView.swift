@@ -12,5 +12,10 @@ struct VSView: View {
     var body: some View {
         Text("VS")
             .font(.largeTitle)
+        NavigationLink{
+            PublisherGameView()
+        }label: {
+            Text("出題者画面")
+        }
     }
 }
