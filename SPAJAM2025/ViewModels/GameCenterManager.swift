@@ -9,6 +9,12 @@ enum PlayerRole: String {
     case unknown   // 未定
 }
 
+// ゲームの結果を定義するEnum
+enum GameOutcome {
+    case won
+    case lost
+}
+
 // NSObjectを継承してObservableObjectに準拠
 class GameCenterManager: NSObject, ObservableObject {
     @Published var isAuthenticated = false
@@ -17,6 +23,9 @@ class GameCenterManager: NSObject, ObservableObject {
     @Published var localPlayerAvatar: Image? = nil
     @Published var opponentAvatar: Image? = nil
     @Published var localPlayerRole: PlayerRole = .unknown // 自分の役割を保持
+    @Published var hiddenStarCoordinates: (azimuth: Double, altitude: Double)? = nil // 回答者側で隠された星の座標を保持
+    @Published var gameOutcome: GameOutcome? = nil // ゲームの勝敗結果
+    @Published var isGameFinished = false // ゲームが終了しタイトルに戻るべきか
     
     // MARK: - 変更点①: 受信したゲーム情報データを保持するプロパティを追加
        @Published var lastReceivedGameInfoFromReceiver: GameInfoFromReceiver?
@@ -88,6 +97,16 @@ class GameCenterManager: NSObject, ObservableObject {
             print("あなたの役割: 回答者 (Receiver)")
         }
     }
+    
+    // ゲームの状態をリセットする
+    func resetGame() {
+        localPlayerRole = .unknown
+        hiddenStarCoordinates = nil
+        gameOutcome = nil
+        lastReceivedAction = nil
+        isGameFinished = false // ゲーム終了状態もリセット
+        currentMatch = nil // マッチング情報もリセット
+    }
 }
 
 extension GameCenterManager {
@@ -117,9 +136,9 @@ extension GameCenterManager {
             match.disconnect()
             
             // 2. 自分の状態をリセットする
-            // これにより、UIが自動的に待機画面に戻る
             DispatchQueue.main.async {
                 self.currentMatch = nil
+                // self.resetGame() // ここではリセットしない
             }
             
             print("マッチから切断しました。")
@@ -169,6 +188,15 @@ extension GameCenterManager: GKMatchDelegate {
 }
 
 extension GameCenterManager {
+    
+    func sendWinNotification() {
+        let playerId = GKLocalPlayer.local.gamePlayerID
+        let action = PlayerAction(
+            playerId: playerId, action: .foundStar, position: nil, selectedIndex: nil, DoubtStarPositionX: nil,DoubtStarPositionY: nil,doubtStarAzimuth: nil,doubtStarAltitude: nil
+        )
+        broadcastPlayerAction(action)
+        print("勝利を通知しました。")
+    }
     
     func sendIndex(_ index: Int) {
         let playerId = GKLocalPlayer.local.gamePlayerID
@@ -298,7 +326,12 @@ extension GameCenterManager {
                 if let azimuth = action.doubtStarAzimuth,
                    let altitude = action.doubtStarAltitude {
                     print("天球座標を受信: 方位角 \(azimuth), 高度 \(altitude)")
+                    self.hiddenStarCoordinates = (azimuth, altitude)
                 }
+            
+            case .foundStar:
+                print("相手が星を発見しました。あなたの負けです。")
+                self.gameOutcome = .lost
                 
             default:
                 print("その他のアクションを受信しました。")

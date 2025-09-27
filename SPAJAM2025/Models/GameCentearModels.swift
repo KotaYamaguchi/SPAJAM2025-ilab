@@ -28,5 +28,5 @@ enum ActionType: String, Codable {
     case move, shoot, jump
     case selectIndex
     case selectDoubtStar
-    
+    case foundStar // 回答者が正解の星を見つけたことを通知
 }

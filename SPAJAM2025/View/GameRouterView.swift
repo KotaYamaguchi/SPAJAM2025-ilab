@@ -12,7 +12,7 @@ struct GameRouterView: View {
                 .navigationBarBackButtonHidden(true)
         case .receiver:
             // 回答者側の初期ビュー
-            ReceiverGameView()
+            ReceiverGameView(gameCenterManager: gameCenterManager)
                 .navigationBarBackButtonHidden(true)
         case .unknown:
             // 役割がまだ決まっていない場合に表示するビュー

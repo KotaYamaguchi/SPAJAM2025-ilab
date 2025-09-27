@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct ReceiverGameView: View {
-    @StateObject private var viewModel = ReceiverGameViewModel()
-    
+    @StateObject private var viewModel: ReceiverGameViewModel
+
+    init(gameCenterManager: GameCenterManager) {
+        _viewModel = StateObject(wrappedValue: ReceiverGameViewModel(gameCenterManager: gameCenterManager))
+    }
+
     var body: some View {
         ZStack{
             LinearGradient(
@@ -19,7 +23,14 @@ struct ReceiverGameView: View {
             case .finding:
                 ReceiverFindingView(viewModel: viewModel)
             case .result:
+                // This case might be obsolete now, but we'll leave it.
                 ReceiverResultView(viewModel: viewModel)
+            }
+        }
+        .fullScreenCover(isPresented: .constant(viewModel.gameCenterManager.gameOutcome != nil)) {
+            if let outcome = viewModel.gameCenterManager.gameOutcome {
+                GameResultView(outcome: outcome)
+                    .environmentObject(viewModel.gameCenterManager)
             }
         }
     }
@@ -28,4 +39,8 @@ struct ReceiverGameView: View {
 enum ReceiverViewIdentifier: String{
     case finding
     case result
+}
+
+#Preview {
+    ReceiverGameView(gameCenterManager: GameCenterManager())
 }
