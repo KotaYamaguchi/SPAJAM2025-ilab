@@ -22,7 +22,7 @@ struct CustomThemedButtonStyle: ButtonStyle {
             // 💡 追加した buttonWidth を使用
             .frame(width: buttonWidth)
             .padding()
-            .background(backgroundColor.opacity(0.8))
+            .background(backgroundColor)
             .foregroundColor(foregroundColor)
             .cornerRadius(32)
             .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)

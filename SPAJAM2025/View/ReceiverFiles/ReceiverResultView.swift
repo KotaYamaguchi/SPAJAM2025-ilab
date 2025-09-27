@@ -10,7 +10,7 @@ import SwiftUI
 struct ReceiverResultView: View {
     // 正解・不正解の状態を管理するState変数
     // 外部から渡されることを想定し、@Stateのままにしていますが、必要に応じて@Bindingなどに変更してください。
-    @State private var isCorrectAnswer = true
+    @State private var isCorrectAnswer = false
 
     // アニメーションのトリガーとなるState変数
     @State private var animate = false
@@ -24,16 +24,14 @@ struct ReceiverResultView: View {
     var body: some View {
         VStack{
             ZStack{
-                Color(red: 0.1, green: 0.1, blue: 0.16)
-                    .ignoresSafeArea()
-                
+
                 if isCorrectAnswer {
                     Group{
                         Image("ZUBOSHI_logo_mask")
                             .resizable()
-                            .brightness(0.12)
-                            .scaleEffect(3.0) // 画像自体のスケールは維持
                             .brightness(0)
+                            .scaleEffect(2.0) // 画像自体のスケールは維持
+                            .brightness(0.4)
                             .mask {
                                 Text("ZUBOSHI")
                                     .blur(radius: 1)
@@ -50,14 +48,15 @@ struct ReceiverResultView: View {
                     Group{
                         Image("ZUBOooN_logo_mask")
                             .resizable()
-                            .brightness(-0.1)
-                            .scaleEffect(3.0) // 画像自体のスケールは維持
                             .brightness(0)
+                            .scaleEffect(5.0) // 画像自体のスケールは維持
+                            .brightness(0)
+                            .grayscale(1.0) // 白黒に変換
                             .mask {
-                                Text("ZUBoooN")
-//                                    .blur(radius: 1)
+                                Text("ZUBoooN...")
+                                    .blur(radius: 0.5)
                                     .shadow(radius: 10)
-                                    .font(.system(size: 80, weight: .black))
+                                    .font(.system(size: 70, weight: .black))
                             }
                     }
                     .frame(width: 500)

@@ -11,10 +11,12 @@ struct PublisherReceiveQuestionView: View {
     @State private var isLier: Bool = false
     @State private var showRespondMessage: Bool = false
     @State private var respondMessage: String = ""
+    
+    @State private var canLieCount: Int = 2
+    
+    @State private var questionText: String = "オリオン座の近くにありますか？"
     var body: some View {
         ZStack{
-            Color(red: 0.1, green: 0.1, blue: 0.4)
-                .ignoresSafeArea()
             VStack{
                 Text("質問が届きました")
                     .foregroundStyle(.white)
@@ -24,7 +26,7 @@ struct PublisherReceiveQuestionView: View {
                         .frame(maxWidth: 350,maxHeight: 100)
                         .foregroundStyle(.white)
                         .shadow(radius: 10)
-                    Text("オリオン座の近くにありますか？")
+                    Text(questionText)
                         .font(.system(size: 20))
                 }
                 Spacer()
@@ -39,18 +41,40 @@ struct PublisherReceiveQuestionView: View {
         }
         
     }
-    @ViewBuilder func answerQuestionButton() -> some View {
+    
+    @ViewBuilder
+    func answerQuestionButton() -> some View {
         VStack{
             HStack{
-                Button{
-                    respondMessage = "バレないようにね..."
-                    isLier = true
-                    showRespondMessage = true
-                }label:{
-                    Text("嘘をつく")
+                ZStack(alignment:.topTrailing){
+                    Button{
+                        respondMessage = "バレないようにね..."
+                        isLier = true
+                        showRespondMessage = true
+                        // 回数を減らす。ただし0以下にはしない
+                        if canLieCount > 0 {
+                            canLieCount = max(0, canLieCount - 1)
+                        }
+                    }label:{
+                        Text("嘘をつく")
+                    }
+                    .buttonStyle(.customThemed(
+                        backgroundColor: canLieCount > 0 ? .blue : .gray.opacity(0.5),
+                        foregroundColor: .white,
+                        width: 100)
+                    )
+                    .disabled(canLieCount == 0)
+                    
+                    Text("\(canLieCount)回")
+                        .padding(10)
+                        .background{
+                            RoundedRectangle(cornerRadius: 50)
+                                .foregroundStyle(.white)
+                        }
+                        .offset(x:10,y:-10)
+                        .shadow(radius: 5)
+                        
                 }
-                .buttonStyle(.customThemed(backgroundColor: .blue, foregroundColor: .white,width: 100))
-                
                 Button{
                     respondMessage = "正直が一番だよね..."
                     isLier = false
@@ -62,7 +86,9 @@ struct PublisherReceiveQuestionView: View {
             }
         }
     }
-    @ViewBuilder func respondingQuestion() -> some View {
+    
+    @ViewBuilder
+    func respondingQuestion() -> some View {
         VStack{
             Spacer()
             Text(respondMessage)
