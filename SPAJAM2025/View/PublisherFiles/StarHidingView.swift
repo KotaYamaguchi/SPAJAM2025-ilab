@@ -48,6 +48,7 @@ struct StarHidingView: View {
                 Spacer()
                 
                 Button{
+                    AudioManager.shared.playSFX("SEButton")
                     // 作成した星の座標を送信する
                     if let star = createdStar {
                         gameCenterManager.sendStarAzimuthAltitude(azimuth: star.azimuth, altitude: star.altitude)

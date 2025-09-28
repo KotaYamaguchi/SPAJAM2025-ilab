@@ -116,6 +116,7 @@ struct ReceiverQuestionView: View {
         VStack(spacing:10){
             ForEach(displayedQuestions, id: \.self) { question in
                 Button{
+                    AudioManager.shared.playSFX("SEButton")
                     viewModel.selectedQuestion = question
                     // Game Center経由で質問内容を送信
                     gameCenterManager.sendGameInfoFromReceiver(selectedQuestion: question, isPushedAnswer: false)
@@ -140,6 +141,7 @@ struct ReceiverQuestionView: View {
     @ViewBuilder func actionButtons() -> some View {
         VStack{
             Button{
+                AudioManager.shared.playSFX("SEButton")
                 selectRandomQuestions()
                 withAnimation { isExpandQuesitions = true }
             }label: {
@@ -155,6 +157,7 @@ struct ReceiverQuestionView: View {
             //.buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
             
             Button{
+                AudioManager.shared.playSFX("SEButton")
                 // 回答ボタンを押した場合の送信も必要ならここで送る
                 withAnimation { isExpandQuesitions = false }
                 

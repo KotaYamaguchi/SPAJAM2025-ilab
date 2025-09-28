@@ -74,6 +74,7 @@ struct MatchingView : View {
                 Spacer()
                 
                 Button {
+                    AudioManager.shared.playSFX("SEButton")
                     // マッチングをキャンセル
                     gameCenterManager.disconnectFromMatch()
                     // 画面を閉じる
@@ -106,6 +107,7 @@ struct MatchingView : View {
         .onChange(of: gameCenterManager.currentMatch) { oldValue, newValue in
             // マッチングが成功したら画面遷移
             if newValue != nil {
+                AudioManager.shared.playSFX("Matching")
                 isMatchingComplete = true
             }
         }
@@ -114,6 +116,7 @@ struct MatchingView : View {
                 .environmentObject(gameCenterManager)
         }
         .onDisappear {
+            AudioManager.shared.stopBGM()
             // マッチングが成功せずに画面が閉じる場合のみ、切断処理を呼ぶ
             if !isMatchingComplete {
                 gameCenterManager.disconnectFromMatch()

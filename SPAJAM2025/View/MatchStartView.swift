@@ -83,6 +83,9 @@ struct MatchStartView: View {
                             .transition(.opacity)
                         
                         Button {
+                            AudioManager.shared.stopBGM()
+                            AudioManager.shared.playSFX("SEButton")
+                            AudioManager.shared.playBGM("マッチングbgm")
                             isShowingMatchingView = true
                         } label: {
                             Text("マッチングスタート")

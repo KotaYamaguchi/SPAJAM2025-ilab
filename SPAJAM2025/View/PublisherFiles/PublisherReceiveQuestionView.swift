@@ -45,6 +45,7 @@ struct PublisherReceiveQuestionView: View {
     func answerQuestionButton() -> some View {
         VStack{
             Button{
+                AudioManager.shared.playSFX("SEButton")
                 showRespondMessage = true
             }label: {
                 Text("回答する")
@@ -68,6 +69,7 @@ struct PublisherReceiveQuestionView: View {
             
             HStack(spacing: 30) {
                 Button {
+                    AudioManager.shared.playSFX("SEButton")
                     isLier = true
                     respondMessage = "嘘をついて答える"
                     showYesNoButtons = true
@@ -85,6 +87,7 @@ struct PublisherReceiveQuestionView: View {
                 .disabled(canLieCount <= 0)
                 
                 Button {
+                    AudioManager.shared.playSFX("SEButton")
                     isLier = false
                     respondMessage = "正直に答える"
                     showYesNoButtons = true
@@ -106,6 +109,7 @@ struct PublisherReceiveQuestionView: View {
                 VStack(spacing: 16) {
                     HStack(spacing: 30) {
                         Button {
+                            AudioManager.shared.playSFX("SEButton")
                             if isLier && canLieCount > 0 {
                                 canLieCount = max(0, canLieCount - 1)
                             }
@@ -125,6 +129,7 @@ struct PublisherReceiveQuestionView: View {
                         //.buttonStyle(.customThemed(backgroundColor: .blue, foregroundColor: .white, width: 90))
                         
                         Button {
+                            AudioManager.shared.playSFX("SEButton")
                             if isLier && canLieCount > 0 {
                                 canLieCount = max(0, canLieCount - 1)
                             }
@@ -145,6 +150,7 @@ struct PublisherReceiveQuestionView: View {
                     }
                     
                     Button(action: {
+                        AudioManager.shared.playSFX("SEButton")
                         showRespondMessage = false
                         showYesNoButtons = false
                     }) {

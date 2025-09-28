@@ -12,8 +12,12 @@ struct ContentView: View {
                 // マッチング前、またはゲーム終了後は、MatchStartViewを表示
                 MatchStartView()
                     .onAppear {
+                        AudioManager.shared.playBGM("bgmHome")
                         // この画面が表示されるたびに、ゲームの状態をリセットする
                         gameCenterManager.resetGame()
+                    }
+                    .onDisappear {
+                        AudioManager.shared.stopBGM()
                     }
             }
         }
