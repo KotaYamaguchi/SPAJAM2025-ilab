@@ -35,6 +35,12 @@ struct GameResultView: View {
                                     .shadow(radius: 10)
                                     .font(.system(size: 80, weight: .black))
                             }
+                            .onAppear {
+                                AudioManager.shared.playSFXLoud("図ボーシ",gainDB: 22)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.9){
+                                    AudioManager.shared.playBGM("winbgm")
+                                }
+                            }
                         Text("あなたの勝ちです!")
                             .foregroundStyle(Color.white)
                             .font(Font.largeTitle.bold())
@@ -67,6 +73,12 @@ struct GameResultView: View {
                                     .blur(radius: 0.5)
                                     .shadow(radius: 10)
                                     .font(.system(size: 70, weight: .black))
+                            }
+                            .onAppear {
+                                AudioManager.shared.playSFXLoud("図ボーン", gainDB: 22)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+                                    AudioManager.shared.playBGM("losebgm")
+                                }
                             }
                         Text("あなたの負けです!")
                             .foregroundStyle(Color.white)
@@ -111,11 +123,6 @@ struct GameResultView: View {
                 withAnimation(.easeOut(duration: 0.3)){
                     animate = true
                 }
-                    if outcome == .won {
-                        AudioManager.shared.playBGM("winbgm")
-                    }else {
-                        AudioManager.shared.playBGM("losebgm")
-                    }
                 
                 // isCorrectAnswerがfalseの場合のみ、追加の回転アニメーションを実行
                 if outcome == .lost {
@@ -139,7 +146,7 @@ struct GameResultView: View {
 
 #Preview {
     VStack {
-        //GameResultView(outcome: .won).environmentObject(GameCenterManager())
-        GameResultView(outcome: .lost).environmentObject(GameCenterManager())
+        GameResultView(outcome: .won).environmentObject(GameCenterManager())
+        //GameResultView(outcome: .lost).environmentObject(GameCenterManager())
     }
 }
