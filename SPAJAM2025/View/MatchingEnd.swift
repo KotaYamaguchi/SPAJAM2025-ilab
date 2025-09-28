@@ -46,9 +46,9 @@ struct MatchingEnd: View {
                     HStack {
                         Spacer()
                         // 三日月アイコン（SF Symbolsを使用）
-                        Image(systemName: "moon.fill")
+                        Image("moon")
                             .resizable()
-                            .frame(width: 60, height: 60)
+                            .frame(width: 80, height: 80)
                             .foregroundColor(.yellow)
                             .opacity(0.6)
                             .padding(.trailing, 43)
