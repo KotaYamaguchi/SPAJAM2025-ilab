@@ -20,7 +20,6 @@ struct ReceiverQuestionView: View {
         "南の空に見えますか？",
         "ベテルギウスが近くにありますか？"
     ]
-    @State private var questionCount: Int = 0
     let maxQuestionCount: Int = 5
 
     var body: some View {
@@ -59,7 +58,7 @@ struct ReceiverQuestionView: View {
                     } else {
                         actionButtons()
                     }
-                    Text("残り質問回数: \(maxQuestionCount - questionCount) 回")
+                    Text("残り質問回数: \(maxQuestionCount - viewModel.questionCount) 回")
                                         .font(.headline)
                                         .foregroundColor(.white)
                                         .padding(.bottom, 5)
@@ -124,7 +123,7 @@ struct ReceiverQuestionView: View {
                     // Game Center経由で質問内容を送信
                     gameCenterManager.sendGameInfoFromReceiver(selectedQuestion: question, isPushedAnswer: false)
                     print("質問を送信: \(question)")
-                    questionCount += 1
+                    viewModel.questionCount += 1
                     
                     // 質問を送信したら、質問リストを閉じる
                     withAnimation {
@@ -153,7 +152,7 @@ struct ReceiverQuestionView: View {
                 selectRandomQuestions()
                 withAnimation { isExpandQuesitions = true }
             }label: {
-                Text(questionCount < maxQuestionCount ? "質問する" : "質問終了")
+                Text(viewModel.questionCount < maxQuestionCount ? "質問する" : "質問終了")
                     .font(.headline)
                     .frame(width: 250)
                     .padding()
@@ -163,7 +162,7 @@ struct ReceiverQuestionView: View {
                     .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
             }
             //.buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
-            .disabled(questionCount >= maxQuestionCount)
+            .disabled(viewModel.questionCount >= maxQuestionCount)
             Button{
                 AudioManager.shared.playSFX("SEButton")
                 // 回答ボタンを押した場合の送信も必要ならここで送る
