@@ -122,6 +122,7 @@ struct StarGazingView: View {
                             if abs(azimuthDifference) < horizontalFOV / 2 && abs(altitudeDifference) < verticalFOV / 2 {
                                 // 3. 計算した位置に天体を描画
                                 Button{
+                                    AudioManager.shared.playSFX("SEButton")
                                     if gameCenterManager.localPlayerRole == .receiver {
                                         if let starPosition = locationViewModel.starPosition(ra: star.ra, dec: star.dec) {
                                             receiverViewModel?.guessedStar = UserStar(name: star.name, azimuth: starPosition.azimuthNorth, altitude: starPosition.altitude)
@@ -181,6 +182,7 @@ struct StarGazingView: View {
                             
                             // 相手の星を表示（色や見た目を変えて区別）
                             Button{
+                                AudioManager.shared.playSFX("SEButton")
                                 if gameCenterManager.localPlayerRole == .receiver {
                                     receiverViewModel?.guessedStar = anotherUserStar
                                     print("推測した星: 相手の星")

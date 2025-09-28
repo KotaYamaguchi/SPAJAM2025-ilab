@@ -117,6 +117,7 @@ struct ReceiverQuestionView: View {
         VStack(spacing:10){
             ForEach(displayedQuestions, id: \.self) { question in
                 Button{
+                    AudioManager.shared.playSFX("SEButton")
                     viewModel.selectedQuestion = question
                     // Game Center経由で質問内容を送信
                     gameCenterManager.sendGameInfoFromReceiver(selectedQuestion: question, isPushedAnswer: false)
@@ -124,8 +125,15 @@ struct ReceiverQuestionView: View {
                     withAnimation { isExpandQuesitions = false }
                 } label: {
                     Text(question)
+                        .font(.headline)
+                        .frame(width: 250)
+                        .padding()
+                        .background(Color.black.opacity(0.3))
+                        .foregroundColor(.white)
+                        .cornerRadius(32)
+                        .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
                 }
-                .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
+                //.buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
             }
         }
     }
@@ -134,22 +142,38 @@ struct ReceiverQuestionView: View {
     @ViewBuilder func actionButtons() -> some View {
         VStack{
             Button{
+                AudioManager.shared.playSFX("SEButton")
                 selectRandomQuestions()
                 withAnimation { isExpandQuesitions = true }
             }label: {
                 Text("質問する")
+                    .font(.headline)
+                    .frame(width: 250)
+                    .padding()
+                    .background(Color.black.opacity(0.3))
+                    .foregroundColor(.white)
+                    .cornerRadius(32)
+                    .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
             }
-            .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
+            //.buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
             
             Button{
+                AudioManager.shared.playSFX("SEButton")
                 // 回答ボタンを押した場合の送信も必要ならここで送る
                 withAnimation { isExpandQuesitions = false }
                 
                 viewModel.checkGuess()
             }label: {
                 Text("ZUBARI！")
+                    .font(.headline)
+                    .frame(width: 250)
+                    .padding()
+                    .background(Color.yellow.opacity(0.3))
+                    .foregroundColor(.white)
+                    .cornerRadius(32)
+                    .shadow(color: .yellow.opacity(0.4) ,radius: 3, x: 0, y: 4)
             }
-            .buttonStyle(.customThemed(backgroundColor: .yellow, foregroundColor: .black))
+            //.buttonStyle(.customThemed(backgroundColor: .yellow, foregroundColor: .black))
             .disabled(viewModel.guessedStar == nil) // 星が選択されていない場合は無効
             .padding(.bottom, 30)
         }

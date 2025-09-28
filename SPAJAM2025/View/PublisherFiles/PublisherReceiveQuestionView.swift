@@ -45,11 +45,19 @@ struct PublisherReceiveQuestionView: View {
     func answerQuestionButton() -> some View {
         VStack{
             Button{
+                AudioManager.shared.playSFX("SEButton")
                 showRespondMessage = true
             }label: {
                 Text("回答する")
+                    .font(.headline)
+                    .frame(width: 200)
+                    .padding()
+                    .background(Color.black.opacity(0.3))
+                    .foregroundColor(.white)
+                    .cornerRadius(32)
+                    .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
             }
-            .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black,width: 200))
+            //.buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black,width: 200))
         }
     }
     @ViewBuilder
@@ -61,23 +69,39 @@ struct PublisherReceiveQuestionView: View {
             
             HStack(spacing: 30) {
                 Button {
+                    AudioManager.shared.playSFX("SEButton")
                     isLier = true
                     respondMessage = "嘘をついて答える"
                     showYesNoButtons = true
                 } label: {
                     Text("嘘をつく")
+                        .font(.headline)
+                        .frame(width: 140)
+                        .padding()
+                        .background(Color.black.opacity(0.3))
+                        .foregroundColor(.white)
+                        .cornerRadius(32)
+                        .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
                 }
-                .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 140))
+                //.buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 140))
                 .disabled(canLieCount <= 0)
                 
                 Button {
+                    AudioManager.shared.playSFX("SEButton")
                     isLier = false
                     respondMessage = "正直に答える"
                     showYesNoButtons = true
                 } label: {
                     Text("正直に答える")
+                        .font(.headline)
+                        .frame(width: 140)
+                        .padding()
+                        .background(Color.black.opacity(0.3))
+                        .foregroundColor(.white)
+                        .cornerRadius(32)
+                        .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
                 }
-                .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 140))
+                //.buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 140))
             }
             .padding(.horizontal)
             
@@ -85,6 +109,7 @@ struct PublisherReceiveQuestionView: View {
                 VStack(spacing: 16) {
                     HStack(spacing: 30) {
                         Button {
+                            AudioManager.shared.playSFX("SEButton")
                             if isLier && canLieCount > 0 {
                                 canLieCount = max(0, canLieCount - 1)
                             }
@@ -95,10 +120,16 @@ struct PublisherReceiveQuestionView: View {
                             Text("はい")
                                 .frame(width: 90, height: 44)
                                 .font(.title2)
+                                .padding()
+                                .background(Color.black.opacity(0.3))
+                                .foregroundColor(.white)
+                                .cornerRadius(32)
+                                .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
                         }
-                        .buttonStyle(.customThemed(backgroundColor: .blue, foregroundColor: .white, width: 90))
+                        //.buttonStyle(.customThemed(backgroundColor: .blue, foregroundColor: .white, width: 90))
                         
                         Button {
+                            AudioManager.shared.playSFX("SEButton")
                             if isLier && canLieCount > 0 {
                                 canLieCount = max(0, canLieCount - 1)
                             }
@@ -109,19 +140,26 @@ struct PublisherReceiveQuestionView: View {
                             Text("いいえ")
                                 .frame(width: 90, height: 44)
                                 .font(.title2)
+                                .padding()
+                                .background(Color.black.opacity(0.3))
+                                .foregroundColor(.white)
+                                .cornerRadius(32)
+                                .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
                         }
-                        .buttonStyle(.customThemed(backgroundColor: .pink, foregroundColor: .white, width: 90))
+                        //.buttonStyle(.customThemed(backgroundColor: .pink, foregroundColor: .white, width: 90))
                     }
                     
                     Button(action: {
+                        AudioManager.shared.playSFX("SEButton")
                         showRespondMessage = false
                         showYesNoButtons = false
                     }) {
                         Image(systemName: "xmark")
-                            .foregroundColor(.gray)
+                            .foregroundColor(.white)
                             .frame(width: 32, height: 32)
                             .background(Circle().foregroundColor(.white))
-                            .shadow(radius: 2)
+                            .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
+                        
                     }
                     .padding(.top, 8)
                 }

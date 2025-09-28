@@ -69,6 +69,7 @@ struct MatchingEnd: View {
                 }
             }
             .onAppear {
+                AudioManager.shared.playSFX("Matching")
                 // 2秒後に画面遷移を実行するタイマー
                 Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { _ in
                     self.shouldNavigateToVSView = true
