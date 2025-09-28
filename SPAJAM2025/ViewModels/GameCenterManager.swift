@@ -7,6 +7,18 @@ enum PlayerRole: String {
     case publisher // 出題者
     case receiver  // 回答者
     case unknown   // 未定
+    
+    /// caseごとの日本語表示名を返す
+    var displayName: String {
+        switch self {
+        case .publisher:
+            return "出題者"
+        case .receiver:
+            return "回答者"
+        case .unknown:
+            return "未定"
+        }
+    }
 }
 
 // ゲームの結果を定義するEnum
@@ -338,5 +350,6 @@ extension GameCenterManager {
             }
         }
 }
+
 
 

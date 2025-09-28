@@ -14,7 +14,7 @@ struct CustomThemedButtonStyle: ButtonStyle {
     var buttonWidth: CGFloat?
     var backgroundColor: Color
     var foregroundColor: Color
-    
+    var opacity: Double?
     func makeBody(configuration: Configuration) -> some View {
         
         configuration.label
@@ -22,7 +22,7 @@ struct CustomThemedButtonStyle: ButtonStyle {
             // 💡 追加した buttonWidth を使用
             .frame(width: buttonWidth)
             .padding()
-            .background(backgroundColor)
+            .background(backgroundColor.opacity(opacity ?? 1.0))
             .foregroundColor(foregroundColor)
             .cornerRadius(32)
             .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
@@ -38,7 +38,8 @@ extension ButtonStyle where Self == CustomThemedButtonStyle {
         backgroundColor: Color,
         foregroundColor: Color,
         // 💡 buttonWidth にデフォルト値 250 を設定
-        width buttonWidth: CGFloat? = 250
+        width buttonWidth: CGFloat? = 250,
+        opacity: Double? = 0.5
     ) -> CustomThemedButtonStyle {
         CustomThemedButtonStyle(
             buttonWidth: buttonWidth,

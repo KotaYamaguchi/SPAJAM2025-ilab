@@ -19,9 +19,9 @@ struct StarView: View {
                 .frame(width: star.collectStar ? 50 : 25, height: star.collectStar ? 50 : 25)
              
 
-            Text("\(star.name)")
-                .foregroundColor(.white)
-                .font(.caption)
+//            Text("\(star.name)")
+//                .foregroundColor(.white)
+//                .font(.caption)
                 
         }
         

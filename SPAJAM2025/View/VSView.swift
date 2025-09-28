@@ -50,7 +50,7 @@ struct VSView : View {
                     
                     Spacer().frame(height: 70)
                     
-                    Text("対戦成立")
+                    Text("相手が見つかりました！")
                         .font(.system(size: 55))
                         .foregroundColor(.white)
                         .padding()
@@ -112,17 +112,19 @@ struct VSView : View {
                         Spacer()
                     }
                     Spacer().frame(height: 50)
-                    
-                    Text("あなたは\(gameCenterManager.localPlayerRole)です")
-                        .font(.system(size: 35))
-                        .foregroundColor(.white)
+                    if  gameCenterManager.localPlayerRole != .unknown{
+                        Text("あなたは\(gameCenterManager.localPlayerRole.displayName)です")
+                            .font(.system(size: 35))
+                            .foregroundColor(.white)
+                        
+                    }
                     
                    Spacer()
                     
                     NavigationLink{
                         GameRouterView()
                     }label: {
-                        Text("開始")
+                        Text("はじめる")
                             .font(.headline)
                             .frame(width: 250)
                             .padding()

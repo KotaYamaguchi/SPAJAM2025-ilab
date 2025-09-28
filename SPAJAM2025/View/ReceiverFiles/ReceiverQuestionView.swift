@@ -59,10 +59,8 @@ struct ReceiverQuestionView: View {
                 if isExpandQuesitions {
                     questionList()
                 } else {
-                    
-                        answerButton()
-                    
-                    askButton()
+                
+                    actionButtons()
                 }
             }
             // MARK: - 追加②: 返答を表示するオーバーレイUI
@@ -130,31 +128,29 @@ struct ReceiverQuestionView: View {
             }
         }
     }
+
     
-    
-    @ViewBuilder func askButton() -> some View {
-        Button{
-            selectRandomQuestions()
-            withAnimation { isExpandQuesitions = true }
-        }label: {
-            Text("質問する")
-        }
-        .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
-    }
-    
-    @ViewBuilder func answerButton() -> some View {
-        Button{
-            // 回答ボタンを押した場合の送信も必要ならここで送る
-            withAnimation { isExpandQuesitions = false }
+    @ViewBuilder func actionButtons() -> some View {
+        VStack{
+            Button{
+                selectRandomQuestions()
+                withAnimation { isExpandQuesitions = true }
+            }label: {
+                Text("質問する")
+            }
+            .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
             
-            viewModel.checkGuess()
-        }label: {
-            Text("ZUBARI！")
-            
-                .buttonStyle(.customThemed(backgroundColor: .yellow, foregroundColor: .black))
-                .disabled(viewModel.guessedStar == nil) // 星が選択されていない場合は無効
-                .padding(.bottom, 30)
-            
+            Button{
+                // 回答ボタンを押した場合の送信も必要ならここで送る
+                withAnimation { isExpandQuesitions = false }
+                
+                viewModel.checkGuess()
+            }label: {
+                Text("ZUBARI！")
+            }
+            .buttonStyle(.customThemed(backgroundColor: .yellow, foregroundColor: .black))
+            .disabled(viewModel.guessedStar == nil) // 星が選択されていない場合は無効
+            .padding(.bottom, 30)
         }
     }
 }
