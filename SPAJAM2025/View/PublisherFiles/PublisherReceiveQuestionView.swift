@@ -90,7 +90,7 @@ struct PublisherReceiveQuestionView: View {
                             }
                             sendAnswerToOpponent(answer: "はい", isLie: isLier)
                             resetToInitial()
-                            currentView = .starHiding
+                            currentView = .returnToStarView
                         } label: {
                             Text("はい")
                                 .frame(width: 90, height: 44)
@@ -104,7 +104,7 @@ struct PublisherReceiveQuestionView: View {
                             }
                             sendAnswerToOpponent(answer: "いいえ", isLie: isLier)
                             resetToInitial()
-                            currentView = .starHiding
+                            currentView = .returnToStarView
                         } label: {
                             Text("いいえ")
                                 .frame(width: 90, height: 44)

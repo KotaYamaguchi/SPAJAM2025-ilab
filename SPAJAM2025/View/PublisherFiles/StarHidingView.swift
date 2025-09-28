@@ -11,24 +11,21 @@ struct StarHidingView: View {
     @Binding var currentView: PublisherViewIdentifier
     @EnvironmentObject var gameCenterManager: GameCenterManager
     
-    @StateObject private var starLoader = StarLoader()
-    
-    // 選択/作成した星を保持する
-    @State private var createdStar: UserStar? = nil
-    // 選択をロックするための状態変数
-    @State private var isLocked = false
+    @Binding var createdStar: UserStar?
+    @Binding var isLocked: Bool
+    @Binding var stars: [Star]
     
     var body: some View {
         ZStack{
             // isLockedとcreatedStarをStarGazingViewに渡す
-            StarGazingView(userStar: $createdStar, stars: $starLoader.stars, isLocked: $isLocked)
+            StarGazingView(userStar: $createdStar, stars: $stars, isLocked: $isLocked)
             
-            if !isLocked {
-                Image(systemName: "plus")
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                    .foregroundColor(.white.opacity(0.7))
-            }
+//            if !isLocked {
+//                Image(systemName: "plus")
+//                    .resizable()
+//                    .frame(width: 40, height: 40)
+//                    .foregroundColor(.white.opacity(0.7))
+//            }
             
             VStack{
                 Spacer()

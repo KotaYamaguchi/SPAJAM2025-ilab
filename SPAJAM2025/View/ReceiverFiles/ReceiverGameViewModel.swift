@@ -78,6 +78,17 @@ class ReceiverGameViewModel: ObservableObject {
     init(gameCenterManager: GameCenterManager) {
         self.gameCenterManager = gameCenterManager
     }
+    
+    func reset() {
+        selectedQuestion = ""
+        selectedStarInfo = ""
+        isPushedAnswer = false
+        isCorrectAnswer = false
+        lastGuessResult = ""
+        guessedStar = nil
+        // gameCenterManager の中の回答情報もリセットする
+        gameCenterManager.lastReceivedGameInfoFromPublisher = nil
+    }
 }
 
 // This struct should not have @Published gameCenterManager or the checkGuess function anymore.
