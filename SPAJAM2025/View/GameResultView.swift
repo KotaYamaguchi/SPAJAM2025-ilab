@@ -7,6 +7,7 @@ struct GameResultView: View {
     
     @State private var animate:Bool = false
     @State private var incorrectRotationDegrees: Double = 0.0 // 回転角度の状態変数
+    @State private var soundCount = 0
     var body: some View {
         ZStack {
             LinearGradient(
@@ -36,9 +37,13 @@ struct GameResultView: View {
                                     .font(.system(size: 80, weight: .black))
                             }
                             .onAppear {
-                                AudioManager.shared.playSFXLoud("図ボーシ",gainDB: 22)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.9){
-                                    AudioManager.shared.playBGM("winbgm")
+                                if soundCount == 0{
+                                    AudioManager.shared.playSFXLoud("図ボーシ",gainDB: 22)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.9){
+                                        AudioManager.shared.playBGM("winbgm")
+                                    }
+                                }else{
+                                    soundCount -= 1
                                 }
                             }
                         Text("あなたの勝ちです!")
@@ -75,9 +80,14 @@ struct GameResultView: View {
                                     .font(.system(size: 70, weight: .black))
                             }
                             .onAppear {
-                                AudioManager.shared.playSFXLoud("図ボーン", gainDB: 22)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
-                                    AudioManager.shared.playBGM("losebgm")
+                                if soundCount == 0 {
+                                    AudioManager.shared.playSFXLoud("図ボーン", gainDB: 22)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+                                        AudioManager.shared.playBGM("losebgm")
+                                    }
+                                    soundCount += 1
+                                }else {
+                                    soundCount -= 1
                                 }
                             }
                         Text("あなたの負けです!")
