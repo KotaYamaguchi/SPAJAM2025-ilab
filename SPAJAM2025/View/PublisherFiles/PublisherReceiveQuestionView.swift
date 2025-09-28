@@ -48,8 +48,15 @@ struct PublisherReceiveQuestionView: View {
                 showRespondMessage = true
             }label: {
                 Text("回答する")
+                    .font(.headline)
+                    .frame(width: 200)
+                    .padding()
+                    .background(Color.black.opacity(0.3))
+                    .foregroundColor(.white)
+                    .cornerRadius(32)
+                    .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
             }
-            .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black,width: 200))
+            //.buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black,width: 200))
         }
     }
     @ViewBuilder
@@ -66,8 +73,15 @@ struct PublisherReceiveQuestionView: View {
                     showYesNoButtons = true
                 } label: {
                     Text("嘘をつく")
+                        .font(.headline)
+                        .frame(width: 140)
+                        .padding()
+                        .background(Color.black.opacity(0.3))
+                        .foregroundColor(.white)
+                        .cornerRadius(32)
+                        .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
                 }
-                .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 140))
+                //.buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 140))
                 .disabled(canLieCount <= 0)
                 
                 Button {
@@ -76,8 +90,15 @@ struct PublisherReceiveQuestionView: View {
                     showYesNoButtons = true
                 } label: {
                     Text("正直に答える")
+                        .font(.headline)
+                        .frame(width: 140)
+                        .padding()
+                        .background(Color.black.opacity(0.3))
+                        .foregroundColor(.white)
+                        .cornerRadius(32)
+                        .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
                 }
-                .buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 140))
+                //.buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black, width: 140))
             }
             .padding(.horizontal)
             
@@ -95,8 +116,13 @@ struct PublisherReceiveQuestionView: View {
                             Text("はい")
                                 .frame(width: 90, height: 44)
                                 .font(.title2)
+                                .padding()
+                                .background(Color.black.opacity(0.3))
+                                .foregroundColor(.white)
+                                .cornerRadius(32)
+                                .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
                         }
-                        .buttonStyle(.customThemed(backgroundColor: .blue, foregroundColor: .white, width: 90))
+                        //.buttonStyle(.customThemed(backgroundColor: .blue, foregroundColor: .white, width: 90))
                         
                         Button {
                             if isLier && canLieCount > 0 {
@@ -109,8 +135,13 @@ struct PublisherReceiveQuestionView: View {
                             Text("いいえ")
                                 .frame(width: 90, height: 44)
                                 .font(.title2)
+                                .padding()
+                                .background(Color.black.opacity(0.3))
+                                .foregroundColor(.white)
+                                .cornerRadius(32)
+                                .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
                         }
-                        .buttonStyle(.customThemed(backgroundColor: .pink, foregroundColor: .white, width: 90))
+                        //.buttonStyle(.customThemed(backgroundColor: .pink, foregroundColor: .white, width: 90))
                     }
                     
                     Button(action: {
@@ -118,10 +149,11 @@ struct PublisherReceiveQuestionView: View {
                         showYesNoButtons = false
                     }) {
                         Image(systemName: "xmark")
-                            .foregroundColor(.gray)
+                            .foregroundColor(.white)
                             .frame(width: 32, height: 32)
                             .background(Circle().foregroundColor(.white))
-                            .shadow(radius: 2)
+                            .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
+                        
                     }
                     .padding(.top, 8)
                 }
