@@ -54,13 +54,14 @@ struct ReceiverQuestionView: View {
                     }
                 
             }
-            VStack {
-                Spacer()
-                if isExpandQuesitions {
-                    questionList()
-                } else {
-                
-                    actionButtons()
+            if let hiddenCoords = gameCenterManager.hiddenStarCoordinates {
+                VStack {
+                    Spacer()
+                    if isExpandQuesitions {
+                        questionList()
+                    } else {
+                        actionButtons()
+                    }
                 }
             }
             // MARK: - 追加②: 返答を表示するオーバーレイUI

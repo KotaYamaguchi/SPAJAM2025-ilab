@@ -3,7 +3,6 @@ import GameKit
 import Combine
 
 class ReceiverGameViewModel: ObservableObject {
-    @Published var currentView: ReceiverViewIdentifier = .finding
     @Published var selectedQuestion: String = ""
     @Published var selectedStarInfo: String = ""
     @Published var isPushedAnswer: Bool = false

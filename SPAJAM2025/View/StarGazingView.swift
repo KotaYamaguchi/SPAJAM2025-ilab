@@ -40,25 +40,25 @@ struct StarGazingView: View {
                     
                     
                     
-                    VStack{
-                        
-                        
-                        
-                        Spacer()
-                        
-                        Image(systemName: "arrowshape.up.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 40, height: 40)
-                            .foregroundStyle(.white)
-                            .padding(10)
-                            .background(Circle().foregroundStyle(.yellow)
-                            )
-                            .padding(20)
-                            .rotationEffect(ArrowAngle)
-                        
-                    }
-                    .zIndex(2)
+//                    VStack{
+//                        
+//                        
+//                        
+//                        Spacer()
+//                        
+//                        Image(systemName: "arrowshape.up.fill")
+//                            .resizable()
+//                            .scaledToFit()
+//                            .frame(width: 40, height: 40)
+//                            .foregroundStyle(.white)
+//                            .padding(10)
+//                            .background(Circle().foregroundStyle(.yellow)
+//                            )
+//                            .padding(20)
+//                            .rotationEffect(ArrowAngle)
+//                        
+//                    }
+//                    .zIndex(2)
                     //
                     //                    VStack{
                     //                        Text("\(motionModel.signedVerticalAngle)")

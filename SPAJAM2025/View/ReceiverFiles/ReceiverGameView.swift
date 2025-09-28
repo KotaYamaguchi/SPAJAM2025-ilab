@@ -19,13 +19,9 @@ struct ReceiverGameView: View {
                 endPoint: .bottom
             )
             .ignoresSafeArea()
-            switch viewModel.currentView {
-            case .finding:
+
                 ReceiverFindingView(viewModel: viewModel)
-            case .result:
-                // This case might be obsolete now, but we'll leave it.
-                ReceiverResultView(viewModel: viewModel)
-            }
+            
         }
         .fullScreenCover(isPresented: .constant(viewModel.gameCenterManager.gameOutcome != nil)) {
             if let outcome = viewModel.gameCenterManager.gameOutcome {
@@ -36,10 +32,6 @@ struct ReceiverGameView: View {
     }
 }
 
-enum ReceiverViewIdentifier: String{
-    case finding
-    case result
-}
 
 #Preview {
     ReceiverGameView(gameCenterManager: GameCenterManager())
