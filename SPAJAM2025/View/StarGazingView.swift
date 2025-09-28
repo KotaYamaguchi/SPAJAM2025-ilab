@@ -217,6 +217,36 @@ struct StarGazingView: View {
                     }
                     
                    
+                // コンパスを表示
+                    VStack {
+                        ZStack {
+                            // コンパスの背景
+                            Circle()
+                                .fill(Color.black.opacity(0.5))
+                            
+                            // N, E, S, W の文字
+                            Text("N").foregroundColor(.white).font(.headline).offset(y: -30)
+                            Text("S").foregroundColor(.white).font(.caption).offset(y: 30)
+                            Text("W").foregroundColor(.white).font(.caption).offset(x: -30)
+                            Text("E").foregroundColor(.white).font(.caption).offset(x: 30)
+
+                            // コンパスの針（北を指す）
+                            Image(systemName: "arrow.up")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 20)
+                                .foregroundColor(.red)
+                                .rotationEffect(Angle(degrees: -headingManager.heading))
+                        }
+                        .frame(width: 80, height: 80)
+                        
+                        Text("\(Int(headingManager.heading))°")
+                            .foregroundColor(.white)
+                            .font(.caption)
+                            .padding(.top, 4)
+                    }
+                    .padding()
+                   
                 }
                 .onReceive(gameCenterManager.$lastReceivedAction) { receivedAction in
                     if let action = receivedAction, action.action == .selectIndex {
