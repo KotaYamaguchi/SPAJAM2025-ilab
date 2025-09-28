@@ -8,7 +8,6 @@
 import SwiftUI
 //出題者側のゲームプレイ画面です．
 struct PublisherGameView: View {
-
     @State private var currentView: PublisherViewIdentifier = .starHiding
     // MARK: - 追加①: GameCenterManagerを環境オブジェクトとして利用
     @EnvironmentObject var gameCenterManager: GameCenterManager
@@ -48,10 +47,6 @@ struct PublisherGameView: View {
                     questionText: receivedQuestion,
                     currentView: $currentView
                 )
-            case .gameResult:
-                Text("結果")
-            case .gamePlay:
-                Text("ゲームプレイ")
             }
         }
         .fullScreenCover(isPresented: .constant(gameCenterManager.gameOutcome != nil)) {
@@ -78,9 +73,7 @@ struct PublisherGameView: View {
 
 enum PublisherViewIdentifier: String {
     case starHiding
-    case gamePlay
     case receiveQuestion
-    case gameResult
 }
 #Preview {
     PublisherGameView()
