@@ -5,6 +5,8 @@ struct GameResultView: View {
     
     let outcome: GameOutcome
     
+    @State private var animate:Bool = false
+    @State private var incorrectRotationDegrees: Double = 0.0 // 回転角度の状態変数
     var body: some View {
         ZStack {
             LinearGradient(
@@ -20,24 +22,71 @@ struct GameResultView: View {
             
             VStack(spacing: 40) {
                 if outcome == .won {
-                    Text("YOU WIN!")
-                        .font(.system(size: 60, weight: .bold, design: .rounded))
-                        .foregroundColor(.yellow)
+                    Group{
+                        Image("ZUBOSHI_logo_mask")
+                            .resizable()
+                            .brightness(0)
+                            .scaleEffect(2.0)
+                            .brightness(0.4)
+                            .mask {
+                                Text("ZUBOSHI")
+                                    .blur(radius: 1)
+                                    .shadow(radius: 10)
+                                    .font(.system(size: 80, weight: .black))
+                            }
+                    }
+                    .frame(width: 500)
+                    .scaleEffect(animate ? 1.0 : 100.0)
+                    .ignoresSafeArea()
                 } else {
-                    Text("YOU LOSE")
-                        .font(.system(size: 60, weight: .bold, design: .rounded))
-                        .foregroundColor(.gray)
+                    Group{
+                        Image("ZUBOooN_logo_mask")
+                            .resizable()
+                            .brightness(0)
+                            .scaleEffect(5.0)
+                            .brightness(0)
+                            .grayscale(1.0)
+                            .mask {
+                                Text("ZUBoooN")
+                                    .blur(radius: 0.5)
+                                    .shadow(radius: 10)
+                                    .font(.system(size: 70, weight: .black))
+                            }
+                    }
+                    .frame(width: 500)
+                    .scaleEffect(animate ? 1.0 : 100.0)
+                    .rotationEffect(.degrees(animate ? 0.0 : 10.0))
+                    .ignoresSafeArea()
                 }
                 Button{
                     gameCenterManager.isGameFinished = true
                     gameCenterManager.disconnectFromMatch()
                 }label: {
                     Text("タイトルに戻る")
-                        .font(.system(size: 60, weight: .bold, design: .rounded))
+                        .font(.headline)
                         .foregroundColor(.gray)
                 }
+                .buttonStyle(.customThemed(backgroundColor: .black, foregroundColor: .white,opacity: 0.4))
             }
-            
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                // 共通のスケールアニメーション
+                withAnimation(.easeOut(duration: 0.3)){
+                    animate = true
+                }
+                
+                // isCorrectAnswerがfalseの場合のみ、追加の回転アニメーションを実行
+                if outcome == .lost {
+                    // 0.5秒後に実行
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        // withAnimationで角度の変更をアニメーションさせる
+                        withAnimation(.easeInOut(duration: 0.4)) {
+                            self.incorrectRotationDegrees = 40
+                        }
+                    }
+                }
+            }
+            }
             
         }
         .navigationBarBackButtonHidden(true)

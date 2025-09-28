@@ -66,8 +66,8 @@ struct MatchingView : View {
                     }
                     
                     ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: Color(red: 0.7, green: 0.7, blue: 0.8)))
-                        .scaleEffect(6.0)
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white/*Color(red: 0.7, green: 0.7, blue: 0.8)*/))
+                        .scaleEffect(2.0)
                 }
                 .offset(y:-60)
                 
