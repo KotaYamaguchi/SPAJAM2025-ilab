@@ -28,14 +28,14 @@ struct ReceiverQuestionView: View {
     
     var body: some View {
         ZStack { // ZStackを追加してオーバーレイを可能に
-            if let guessedStarName = viewModel.guessedStar?.name {
-                Text("選択中の星: \(guessedStarName)")
-                    .foregroundColor(.green)
-                    .padding()
-                    .background(Color.black.opacity(0.7))
-                    .cornerRadius(10)
-                    .padding(.bottom, 5)
-            }
+//            if let guessedStarName = viewModel.guessedStar?.name {
+//                Text("選択中の星: \(guessedStarName)")
+//                    .foregroundColor(.green)
+//                    .padding()
+//                    .background(Color.black.opacity(0.7))
+//                    .cornerRadius(10)
+//                    .padding(.bottom, 5)
+//            }
             
             // 推測結果のフィードバックを表示
             if !viewModel.lastGuessResult.isEmpty {

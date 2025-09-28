@@ -166,8 +166,22 @@ struct StarGazingView: View {
                             let screenY = geometry.size.height / 2 - CGFloat(altitudeDifference / (verticalFOV / 2)) * (geometry.size.height / 2)
                             
                             // 仮のStarオブジェクトでStarViewを表示
-                            StarView(star: Star(name: userStar.name, ra: "", dec: "", vmag: 1.5, collectStar: false))
+                            let starView = StarView(star: Star(name: userStar.name, ra: "", dec: "", vmag: 1.5, collectStar: false))
                                 .position(x: screenX, y: screenY)
+
+                            // 出題者の場合のみ、配置する星を目立たせる
+                            if gameCenterManager.localPlayerRole == .publisher {
+                                starView
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.yellow, lineWidth: 2)
+                                            .blur(radius: 3)
+                                            .frame(width: 40, height: 40)
+                                            .position(x: screenX, y: screenY)
+                                    )
+                            } else {
+                                starView
+                            }
                         }
                     }
                     if let anotherUserStar = anotherUserStar {
@@ -191,10 +205,9 @@ struct StarGazingView: View {
                                 .position(x: screenX, y: screenY)
                                 .overlay(
                                     Group {
+                                        // 相手の星が推測の星として選択されている場合のみ緑の円を表示
                                         if receiverViewModel?.guessedStar?.name == "相手の星" {
                                             Circle().stroke(Color.green, lineWidth: 3).frame(width: 40, height: 40)
-                                        } else {
-                                            Circle().stroke(Color.red, lineWidth: 2).frame(width: 30, height: 30)
                                         }
                                     }.position(x: screenX, y: screenY)
                                 )
