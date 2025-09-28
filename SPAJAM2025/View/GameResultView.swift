@@ -4,9 +4,13 @@ struct GameResultView: View {
     @EnvironmentObject var gameCenterManager: GameCenterManager
     
     let outcome: GameOutcome
-    
+    @State var questionCount:Int?
     @State private var animate:Bool = false
     @State private var incorrectRotationDegrees: Double = 0.0 // 回転角度の状態変数
+    @AppStorage("canLieCount") private var canLieCount: Int = 2
+    private func winnerScore()-> Int{
+       return 100 - questionCount! * 20
+    }
     var body: some View {
         ZStack {
             LinearGradient(
@@ -50,7 +54,7 @@ struct GameResultView: View {
                                 .font(.headline)
                                 .padding(5)
                             //点数
-                            Text("仮")
+                            Text("\(winnerScore())点")
                                 .foregroundStyle(Color.white)
                                 .font(.largeTitle.bold())
                         }
@@ -89,7 +93,7 @@ struct GameResultView: View {
                                 .font(.headline)
                                 .padding(5)
                             //点数
-                            Text("仮")
+                            Text("\(100 - winnerScore())点")
                                 .foregroundStyle(Color.white)
                                 .font(.largeTitle.bold())
                         }
@@ -104,7 +108,7 @@ struct GameResultView: View {
                     AudioManager.shared.playSFX("SEButton")
                     gameCenterManager.isGameFinished = true
                     gameCenterManager.disconnectFromMatch()
-                    
+                    canLieCount = 2
                 }label: {
                     Text("タイトルに戻る")
                         .font(.headline)

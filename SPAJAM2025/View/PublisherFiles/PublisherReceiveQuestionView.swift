@@ -11,7 +11,7 @@ struct PublisherReceiveQuestionView: View {
     @State private var isLier: Bool = false
     @State private var showRespondMessage: Bool = false
     @State private var respondMessage: String = ""
-    @State private var canLieCount: Int = 2
+    @AppStorage("canLieCount") private var canLieCount: Int = 2
     @State private var showYesNoButtons: Bool = false
     
     var body: some View {
@@ -70,11 +70,15 @@ struct PublisherReceiveQuestionView: View {
             HStack(spacing: 30) {
                 Button {
                     AudioManager.shared.playSFX("SEButton")
-                    isLier = true
-                    respondMessage = "嘘をついて答える"
-                    showYesNoButtons = true
+                    if canLieCount > 0 {
+                        isLier = true
+                        showRespondMessage = true
+                        respondMessage = "嘘の回答をしてください"
+                        showYesNoButtons = true
+                        canLieCount -= 1 // 嘘をつける回数を1減らす
+                    }
                 } label: {
-                    Text("嘘をつく")
+                    Text("嘘をつく (残り\(canLieCount)回)")
                         .font(.headline)
                         .frame(width: 140)
                         .padding()
