@@ -17,12 +17,20 @@ struct StarView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: star.collectStar ? 50 : 25, height: star.collectStar ? 50 : 25)
-             
-
-//            Text("\(star.name)")
-//                .foregroundColor(.white)
-//                .font(.caption)
+            
+            if star.name.prefix(3) == "HIP"{
+               
+            }else if star.name.prefix(3) == "相手の"{
                 
+            }else{
+                Text("\(star.name)")
+                    .foregroundColor(.white)
+                    .font(.caption)
+            }
+            //            Text("\(star.name)")
+            //                .foregroundColor(.white)
+            //                .font(.caption)
+            
         }
         
     }
