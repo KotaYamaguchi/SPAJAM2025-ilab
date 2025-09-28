@@ -13,19 +13,15 @@ struct ReceiverQuestionView: View {
     @State private var publisherAnswer: String? = nil
     
     let questions: [String] = [
-        "空の真上に近い位置に見えますか？",
+        "シリウスの近くにありますか？",
         "北の空に見えますか？",
         "東の空に見えますか？",
-        "オリオン座の近くにありますか？",
-        "北斗七星の近くにありますか？",
-        "天の川の近くにありますか？",
-        "太陽系の惑星の近くにありますか？",
-        "地平線から30度以下の低い位置に見えますか？",
-        "目で見える最も明るい星と近いですか？",
-        "近くに，赤やオレンジ色に見える星がありますか？",
-        "金星や木星と近くにありますか？",
+        "西の空に見えますか？",
+        "南の空に見えますか？",
+        "ベテルギウスが近くにありますか？"
     ]
-    
+    let maxQuestionCount: Int = 5
+
     var body: some View {
         ZStack { // ZStackを追加してオーバーレイを可能に
 //            if let guessedStarName = viewModel.guessedStar?.name {
@@ -62,6 +58,11 @@ struct ReceiverQuestionView: View {
                     } else {
                         actionButtons()
                     }
+                    Text("残り質問回数: \(maxQuestionCount - viewModel.questionCount) 回")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding(.bottom, 5)
+                                        .shadow(radius: 2)
                 }
             }
             // MARK: - 追加②: 返答を表示するオーバーレイUI
@@ -122,7 +123,12 @@ struct ReceiverQuestionView: View {
                     // Game Center経由で質問内容を送信
                     gameCenterManager.sendGameInfoFromReceiver(selectedQuestion: question, isPushedAnswer: false)
                     print("質問を送信: \(question)")
-                    withAnimation { isExpandQuesitions = false }
+                    viewModel.questionCount += 1
+                    
+                    // 質問を送信したら、質問リストを閉じる
+                    withAnimation {
+                        isExpandQuesitions = false
+                    }
                 } label: {
                     Text(question)
                         .font(.headline)
@@ -146,7 +152,7 @@ struct ReceiverQuestionView: View {
                 selectRandomQuestions()
                 withAnimation { isExpandQuesitions = true }
             }label: {
-                Text("質問する")
+                Text(viewModel.questionCount < maxQuestionCount ? "質問する" : "質問終了")
                     .font(.headline)
                     .frame(width: 250)
                     .padding()
@@ -156,7 +162,7 @@ struct ReceiverQuestionView: View {
                     .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
             }
             //.buttonStyle(.customThemed(backgroundColor: .white, foregroundColor: .black))
-            
+            .disabled(viewModel.questionCount >= maxQuestionCount)
             Button{
                 AudioManager.shared.playSFX("SEButton")
                 // 回答ボタンを押した場合の送信も必要ならここで送る

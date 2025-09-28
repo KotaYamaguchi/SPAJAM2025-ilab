@@ -4,7 +4,7 @@ struct GameResultView: View {
     @EnvironmentObject var gameCenterManager: GameCenterManager
     
     let outcome: GameOutcome
-    
+    @State var questionCount:Int?
     @State private var animate:Bool = false
     @State private var incorrectRotationDegrees: Double = 0.0 // 回転角度の状態変数
     @State private var soundCount = 0
@@ -49,16 +49,7 @@ struct GameResultView: View {
                         Text("あなたの勝ちです!")
                             .foregroundStyle(Color.white)
                             .font(Font.largeTitle.bold())
-                        VStack{
-                            Text("あなたのスコア")
-                                .foregroundStyle(Color.white)
-                                .font(.headline)
-                                .padding(5)
-                            //点数
-                            Text("仮")
-                                .foregroundStyle(Color.white)
-                                .font(.largeTitle.bold())
-                        }
+
                         Spacer()
                     }
                     .frame(width: 500)
@@ -93,16 +84,7 @@ struct GameResultView: View {
                         Text("あなたの負けです!")
                             .foregroundStyle(Color.white)
                             .font(Font.largeTitle.bold())
-                        VStack{
-                            Text("あなたのスコア")
-                                .foregroundStyle(Color.white)
-                                .font(.headline)
-                                .padding(5)
-                            //点数
-                            Text("仮")
-                                .foregroundStyle(Color.white)
-                                .font(.largeTitle.bold())
-                        }
+   
                         Spacer()
                     }
                     .frame(width: 500)
@@ -114,7 +96,7 @@ struct GameResultView: View {
                     AudioManager.shared.playSFX("SEButton")
                     gameCenterManager.isGameFinished = true
                     gameCenterManager.disconnectFromMatch()
-                    
+                    canLieCount = 2
                 }label: {
                     Text("タイトルに戻る")
                         .font(.headline)

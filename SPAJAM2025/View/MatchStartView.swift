@@ -61,16 +61,22 @@ struct MatchStartView: View {
                     
                     if tapCount == 0 {
                         VStack{
-                            Text("今夜は月が綺麗ですね")
-                                .padding(.bottom,30)
-                                .font(.system(size:35))
-                                .foregroundColor(.white)
-                                .transition(.opacity)
-                                .font(.system(.title, design: .serif))
-                            
-                            Text("タップ")
-                                .font(.title)
-                                .foregroundColor(.gray.opacity(0.8))
+                            Image("titleLogo")
+                                .resizable()
+                                .frame(width: 400,height: 400)
+                                .offset(x:10)
+                            VStack{
+                                Text("今夜は月が綺麗ですね")
+                                    .padding(.bottom,30)
+                                    .font(.system(size:35))
+                                    .foregroundColor(.white)
+                                    .transition(.opacity)
+                                    .font(.system(.title, design: .serif))
+                                Text("タップ")
+                                    .font(.title)
+                                    .foregroundColor(.gray.opacity(0.8))
+                            }
+                            .offset(y:-120)
                         }
                         .transition(.opacity)
                     }

@@ -15,6 +15,8 @@ class ReceiverGameViewModel: ObservableObject {
     @Published var starLoader = StarLoader()
     
     @Published var gameCenterManager: GameCenterManager
+    
+    @Published var questionCount: Int = 0
 
     // 正解との許容誤差（度）
     private let tolerance: Double = 2.0 // 許容誤差を少し厳しくする
