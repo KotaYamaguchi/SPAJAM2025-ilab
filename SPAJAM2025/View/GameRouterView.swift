@@ -10,10 +10,12 @@ struct GameRouterView: View {
             // 出題者側の初期ビュー
             PublisherGameView()
                 .navigationBarBackButtonHidden(true)
+                .id(gameCenterManager.currentMatch)
         case .receiver:
             // 回答者側の初期ビュー
             ReceiverGameView(gameCenterManager: gameCenterManager)
                 .navigationBarBackButtonHidden(true)
+                .id(gameCenterManager.currentMatch)
         case .unknown:
             // 役割がまだ決まっていない場合に表示するビュー
             VStack {

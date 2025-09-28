@@ -29,6 +29,7 @@ struct ReceiverGameView: View {
                     .environmentObject(viewModel.gameCenterManager)
             }
         }
+        .onAppear(perform: viewModel.reset)
     }
 }
 

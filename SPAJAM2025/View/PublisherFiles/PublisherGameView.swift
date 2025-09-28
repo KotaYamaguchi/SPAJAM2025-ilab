@@ -14,13 +14,12 @@ struct PublisherGameView: View {
     
     // MARK: - 追加②: 受信した質問を保持するState変数
     @State private var receivedQuestion: String = ""
-    //送信するデータ
-    //出題者に送信する「はい」「いいえ」のString
-    @State private var isAnsweredQuestion: Bool = false
-    //回答したことを伝えるフラグ
-    @State private var isAnsweredFlag: Bool = false
     
-    //送信するデータここまで
+    // StarHidingViewから状態を昇格
+    @StateObject private var starLoader = StarLoader()
+    @State private var createdStar: UserStar? = nil
+    @State private var isLocked = false
+    
     var body: some View {
         ZStack{
             LinearGradient(
@@ -40,12 +39,23 @@ struct PublisherGameView: View {
             
             switch currentView {
             case .starHiding:
-                StarHidingView(currentView: $currentView)
+                StarHidingView(
+                    currentView: $currentView,
+                    createdStar: $createdStar,
+                    isLocked: $isLocked,
+                    stars: $starLoader.stars
+                )
             case .receiveQuestion:
                 // MARK: - 変更点①: PublisherReceiveQuestionViewに受信した質問とcurrentViewのBindingを渡す
                 PublisherReceiveQuestionView(
                     questionText: receivedQuestion,
                     currentView: $currentView
+                )
+            case .returnToStarView:
+                StarGazingView(
+                    userStar: $createdStar,
+                    stars: $starLoader.stars,
+                    isLocked: $isLocked
                 )
             }
         }
@@ -68,12 +78,22 @@ struct PublisherGameView: View {
                 
             }
         }
+        .onAppear(perform: resetViewStates)
+    }
+    
+    private func resetViewStates() {
+        currentView = .starHiding
+        receivedQuestion = ""
+        createdStar = nil
+        isLocked = false
+        gameCenterManager.lastReceivedGameInfoFromReceiver = nil
     }
 }
 
 enum PublisherViewIdentifier: String {
     case starHiding
     case receiveQuestion
+    case returnToStarView
 }
 #Preview {
     PublisherGameView()

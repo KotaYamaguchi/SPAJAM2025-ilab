@@ -118,6 +118,10 @@ class GameCenterManager: NSObject, ObservableObject {
         lastReceivedAction = nil
         isGameFinished = false // ゲーム終了状態もリセット
         currentMatch = nil // マッチング情報もリセット
+        
+        // ゲームをまたいで残ってしまう情報をリセット
+        lastReceivedGameInfoFromReceiver = nil
+        lastReceivedGameInfoFromPublisher = nil
     }
 }
 
