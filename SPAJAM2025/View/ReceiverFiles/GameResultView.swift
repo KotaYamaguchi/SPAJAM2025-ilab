@@ -20,9 +20,10 @@ struct GameResultView: View {
             )
             .ignoresSafeArea()
             
-            VStack(spacing: 40) {
+            VStack(spacing: 30) {
                 if outcome == .won {
                     Group{
+                        Spacer()
                         Image("ZUBOSHI_logo_mask")
                             .resizable()
                             .brightness(0)
@@ -34,12 +35,27 @@ struct GameResultView: View {
                                     .shadow(radius: 10)
                                     .font(.system(size: 80, weight: .black))
                             }
+                        Text("あなたの勝ちです!")
+                            .foregroundStyle(Color.white)
+                            .font(Font.largeTitle.bold())
+                        VStack{
+                            Text("あなたのスコア")
+                                .foregroundStyle(Color.white)
+                                .font(.headline)
+                                .padding(5)
+                            //点数
+                            Text("仮")
+                                .foregroundStyle(Color.white)
+                                .font(.largeTitle.bold())
+                        }
+                        Spacer()
                     }
                     .frame(width: 500)
                     .scaleEffect(animate ? 1.0 : 100.0)
                     .ignoresSafeArea()
                 } else {
                     Group{
+                        Spacer()
                         Image("ZUBOooN_logo_mask")
                             .resizable()
                             .brightness(0)
@@ -52,6 +68,20 @@ struct GameResultView: View {
                                     .shadow(radius: 10)
                                     .font(.system(size: 70, weight: .black))
                             }
+                        Text("あなたの負けです!")
+                            .foregroundStyle(Color.white)
+                            .font(Font.largeTitle.bold())
+                        VStack{
+                            Text("あなたのスコア")
+                                .foregroundStyle(Color.white)
+                                .font(.headline)
+                                .padding(5)
+                            //点数
+                            Text("仮")
+                                .foregroundStyle(Color.white)
+                                .font(.largeTitle.bold())
+                        }
+                        Spacer()
                     }
                     .frame(width: 500)
                     .scaleEffect(animate ? 1.0 : 100.0)
@@ -64,9 +94,14 @@ struct GameResultView: View {
                 }label: {
                     Text("タイトルに戻る")
                         .font(.headline)
-                        .foregroundColor(.gray)
+                        .frame(width: 250)
+                        .padding()
+                        .background(Color.black.opacity(0.3))
+                        .foregroundColor(.white)
+                        .cornerRadius(32)
+                        .shadow(color: .black.opacity(0.4) ,radius: 3, x: 0, y: 4)
                 }
-                .buttonStyle(.customThemed(backgroundColor: .black, foregroundColor: .white,opacity: 0.4))
+                //.buttonStyle(.customThemed(backgroundColor: .black, foregroundColor: .white,opacity: 0.4))
             }
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
